@@ -1,0 +1,9 @@
+.background-container {
+  width: 100%; /* Set the width to 100% to fill the parent container */
+  height: 100%; /* Set the height to fill the parent container */
+  background-image: url("https://media.istockphoto.com/id/1220226286/photo/doctor-with-protection-glasses-male-half-face.jpg?s=2048x2048&w=is&k=20&c=AbYmAlmyALAO7TL5k3yCSnGKhfCBYlbJhWwLUn0pbuM="); /* Set background image */
+  background-size: cover; /* Cover the entire container */
+  /* background-position: center; Center the background image */
+  opacity: 0.8; /* Set opacity to 0.1 for very light effect (adjust as needed) */
+  box-shadow: 0px 0px 10px 0px rgba(0, 0, 0, 0.30);
+}

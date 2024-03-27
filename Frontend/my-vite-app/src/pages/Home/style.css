@@ -1,0 +1,48 @@
+.d1 {
+  content: url(./../../assets/d1.webp);
+}
+.d2 {
+  content: url(./../../assets/d2.webp);
+}
+.d3 {
+  content: url(./../../assets/d3.webp);
+}
+.d4 {
+  content: url(./../../assets/d4.png);
+}
+.d5 {
+  content: url(./../../assets/d5.png);
+}
+.card-container {
+  height: 200px; /* Adjust the height as needed */
+}
+.s2 {
+  content: url(./../../assets/s4.jpg);
+}
+.s3 {
+  content: url(./../../assets/s2.jpg);
+}
+.s4 {
+  content: url(./../../assets/s3.jpg);
+}
+.s1 {
+  content: url(./../../assets/s1.jpg);
+}
+.a1 {
+  content: url(./../../assets/a1.jpg);
+}
+.a2 {
+  content: url(./../../assets/a2.jpg);
+}
+.t1 {
+  content: url(./../../assets/t1.png);
+}
+.t6 {
+  content: url(./../../assets/t4.png);
+}
+.t2 {
+  content: url(./../../assets/t2.png);
+}
+.t3 {
+  content: url(./../../assets/t3.svg);
+}
