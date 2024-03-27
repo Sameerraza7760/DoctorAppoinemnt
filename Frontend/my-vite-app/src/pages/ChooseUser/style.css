@@ -1,0 +1,6 @@
+.doctor {
+  content: url(./../../assets/doctoravatar.jpg);
+}
+.patient {
+  content: url(./../../assets/patient.jpg);
+}
