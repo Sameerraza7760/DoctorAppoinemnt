@@ -1,17 +1,11 @@
 import Router from "express";
-import { regesterUser } from "../controllers/user.controller.js";
-import { upload } from "../middlewares/multer.middleware.js";
-import { loginUser, logoutUser } from "../controllers/user.controller.js";
+import { loginUser, logoutUser, registerDoctor } from "../controllers/doctor.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { setUserTypeMiddleware } from "../middlewares/checkUserType.middleware.js";
 const router = Router();
-router.route("/register").post(
-  upload.fields([
-    { name: "avatar", maxCount: 1 },
-    { name: "coverImage", maxCount: 1 },
-  ]),
-  regesterUser
-);
+router.route("/register/doctor").post(registerDoctor);
+// router.post("/register/patient").post(registerPatient);
 
-router.route("/login").post(loginUser);
+router.route("/login").post(setUserTypeMiddleware,loginUser);
 router.route("/logout").post(verifyJWT, logoutUser);
 export default router;

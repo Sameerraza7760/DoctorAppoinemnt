@@ -1,6 +1,8 @@
 import axios from "axios";
 import "./../style.css";
+import { useNavigate } from "react-router-dom";
 function Header() {
+  const navigate = useNavigate();
   const handleLogout = async () => {
     try {
       const accsessToken = localStorage.getItem("accessToken");
@@ -14,7 +16,7 @@ function Header() {
         }
       );
       console.log(response.data);
-      alert("Logout successful"); 
+      alert("Logout successful");
       localStorage.removeItem("accessToken");
     } catch (error: any) {
       console.error("Error logging out:", error.message);
@@ -56,10 +58,10 @@ function Header() {
               </a>
             </li>{" "}
             <button
-              onClick={handleLogout}
+              onClick={() => navigate("/chooseUser")}
               className="inline-flex ml-5 text-gray-400 border border-gray-700 px-6 outline-4 focus:outline-none rounded"
             >
-              logout
+              Login
             </button>
           </ul>
         </nav>

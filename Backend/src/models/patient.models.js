@@ -1,9 +1,9 @@
 import mongoose, { Schema } from "mongoose";
 import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
-const UserSchema = new Schema(
+const PatientSchema = new Schema(
   {
-    username: {
+    fullName: {
       type: String,
       required: true,
       unique: true,
@@ -18,25 +18,28 @@ const UserSchema = new Schema(
       lowercase: true,
       trim: true,
     },
-    fullName: {
+
+    gender: {
       type: String,
       required: true,
       index: true,
       trim: true,
     },
-    // avatar: {
-    //   type: String, //cloudnary url
-    //   required: true,
-    // },
-    // coverImage: {
-    //   type: String, //cloudnary url
-    // },
-    watchHistory: {
-      type: Schema.Types.ObjectId,
-      ref: "Video",
+    phoneNumber: {
+      type: String,
+      required: true,
+      index: true,
+      trim: true,
     },
+    address: {
+      type: String,
+      required: true,
+      index: true,
+      trim: true,
+    },
+
     password: {
-      type: String, //cloudnary url
+      type: String,
       required: [true, "password is required"],
     },
     refreshToken: {
@@ -45,17 +48,17 @@ const UserSchema = new Schema(
   },
   { timestamps: true }
 );
-UserSchema.pre("save", async function (next) {
+PatientSchema.pre("save", async function (next) {
   if (!this.isModified("password")) return next(); // in this this line check that the password in the database is bycrypt or not if bycript so return else bycript the password
 
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
-UserSchema.methods.isPasswordCorrect = async function (password) {
+PatientSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
 }; //in this we cheak that password when the user is loggin the password is correct or not this is the method to cheak the password
 // export const User = mongoose.model("User", UserSchema);
-UserSchema.methods.generateAccessToken = async function () {
+PatientSchema.methods.generateAccessToken = async function () {
   return jwt.sign(
     {
       // Token payload
@@ -69,7 +72,7 @@ UserSchema.methods.generateAccessToken = async function () {
   );
 };
 
-UserSchema.methods.generateRefreshToken = async function () {
+PatientSchema.methods.generateRefreshToken = async function () {
   return jwt.sign(
     {
       _id: this._id,
@@ -79,4 +82,4 @@ UserSchema.methods.generateRefreshToken = async function () {
   );
 };
 
-export const User = mongoose.model("User", UserSchema);
+export const Patient = mongoose.model("Patient", PatientSchema);
