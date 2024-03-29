@@ -1,10 +1,18 @@
+import { useEffect } from "react";
+import { UserType } from "../../types/type.Role";
+import { useUserContext } from "../../contexts/UserContexts/UserProvider";
+import { useNavigate } from "react-router-dom";
 import "./style.css";
-import { useState } from "react";
 function ChooseUser() {
-  const [selectedUser, setSelectedUser] = useState<string>();
-  const handleUserSelection = (user: string) => {
-    setSelectedUser(user);
+  const { userType, setUserType } = useUserContext();
+  const navigate = useNavigate();
+  const handleUserSelection = (user: UserType) => {
+    setUserType(user);
+    console.log(userType);
   };
+  useEffect(() => {
+    console.log(userType);
+  }, [userType]);
   return (
     <div className="bg-gray-100 min-h-screen">
       <div className="w-full bg-blue-600 h-[100px] p-6 text-center">
@@ -24,7 +32,7 @@ function ChooseUser() {
         </div>
         <div
           className={`${
-            selectedUser === "doctor" ? "bg-blue-500" : "bg-gray-300"
+            userType === "doctor" ? "bg-blue-500" : "bg-gray-300"
           } h-1/5 w-3/4 mx-auto p-8 sm:rounded-lg text-lg cursor-pointer shadow-md`}
           onClick={() => handleUserSelection("doctor")}
         >
@@ -36,7 +44,7 @@ function ChooseUser() {
             />
             <h1
               className={`${
-                selectedUser === "doctor" ? "text-white" : "text-black"
+                userType === "doctor" ? "text-white" : "text-black"
               } font-bold`}
             >
               Doctor
@@ -44,7 +52,7 @@ function ChooseUser() {
           </div>
           <p
             className={`${
-              selectedUser === "doctor" ? "text-white" : "text-gray-500"
+              userType === "doctor" ? "text-white" : "text-gray-500"
             }`}
           >
             Can Organize and Approve Appointment
@@ -52,7 +60,7 @@ function ChooseUser() {
         </div>
         <div
           className={`${
-            selectedUser === "patient" ? "bg-blue-500" : "bg-gray-300"
+            userType === "patient" ? "bg-blue-500" : "bg-gray-300"
           } h-1/5 w-3/4 mx-auto p-8 sm:rounded-lg text-lg cursor-pointer shadow-md`}
           onClick={() => handleUserSelection("patient")}
         >
@@ -60,7 +68,7 @@ function ChooseUser() {
             <img src="" className="patient w-12 h-12 rounded-full" alt="" />
             <h1
               className={`${
-                selectedUser === "patient" ? "text-white" : "text-black"
+                userType === "patient" ? "text-white" : "text-black"
               } font-bold`}
             >
               Patient
@@ -68,7 +76,7 @@ function ChooseUser() {
           </div>
           <p
             className={`${
-              selectedUser === "patient" ? "text-white" : "text-gray-500"
+              userType === "patient" ? "text-white" : "text-gray-500"
             }`}
           >
             Can Book Appointment
@@ -76,6 +84,7 @@ function ChooseUser() {
         </div>
         <div className="flex-col gap-3 flex w-[300px] mx-auto ">
           <button
+            onClick={() => navigate(`/register/${userType}`)}
             type="button"
             className="text-white w-[200px] bg-blue-600 hover:bg-blue-800 focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-blue-600 dark:hover:bg-blue-700 focus:outline-none dark:focus:ring-blue-800"
           >

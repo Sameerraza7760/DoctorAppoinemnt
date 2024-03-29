@@ -1,11 +1,13 @@
 import { asyncHandler } from "../utills/asyncHandler.js";
-import { User } from "../models/user.models.js";
+import { Doctor } from "../models/doctor.models.js";
 import { ApiError } from "../utills/ApiError.js";
 import { ApiResponce } from "../utills/ApiResponce.js";
-
+const checkExistingUser = async (model) => {
+  return await model.findOne({ $or: [{ email }] });
+};
 const generateAccsessAndRefereshTokens = async (userId) => {
   try {
-    const user = await User.findById(userId);
+    const user = await Doctor.findById(userId);
     const accessToken = await user.generateAccessToken();
     const refreshToken = await user.generateRefreshToken();
     user.refreshToken = refreshToken;
@@ -15,58 +17,40 @@ const generateAccsessAndRefereshTokens = async (userId) => {
     throw new ApiError(500, error.message);
   }
 };
-const regesterUser = asyncHandler(async (req, res) => {
-  // Perform user registration logic here
+const registerDoctor = asyncHandler(async (req, res) => {
+  const {
+    fullName,
+    email,
+    gender,
+    phoneNumber,
+    address,
+    password,
+    specialization,
+  } = req.body;
 
-  // Assuming registration is successful
-  // return res.status(200).json({ message: "OK" });
-  const { fullName, email, username, password } = req.body;
-  console.log("email : ", email);
-  if (
-    [fullName, email, username, password].some((field) => field?.trim() === "")
-  ) {
-    throw new ApiError(400, "All Fields Are Required");
-  }
-  const existedUser = await User.findOne({ $or: [{ username }, { email }] });
+  const existedUser = await Doctor.findOne({ $or: [{ email }] });
   if (existedUser) {
     throw new ApiError(409, "User with email or username alrady exists");
   }
-  // const avatarLocalPath = req.files?.avatar?.[0]?.path;
-  // const coverImageLocalPath = req.files?.coverImage?.[0]?.path;
-  // if (!avatarLocalPath) {
-  //   throw new ApiError(400, "Avatar Image is required");
-  // }
-  // const avatar = await uploadOnCloudinary(avatarLocalPath);
-  // const coverImage = await uploadOnCloudinary(coverImageLocalPath);
-  // if (!avatar) {
-  //   throw new ApiError(400, "Avatar file is Required");
-  // }
-  // let coverImage;
-  // if (
-  //   req.files &&
-  //   Array.isArray(req.files.coverImage) &&
-  //   req.files.coverImage[0].path
-  // ) {
-  //   coverImage = req.files.coverImage[0].path;
-  // }
-  const user = await User.create({
-    fullName,
-    // avatar: avatar.url,
-    // coverImage: coverImage.url || "",
+  const doctor = await Doctor.create({
+    fullName: fullName.toLowerCase(),
     email,
+    gender,
+    phoneNumber,
+    address,
     password,
-    username: username.toLowerCase(),
+    specialization,
   });
-  const createdUser = await User.findById(user._id).select(
+
+  const createdDoctor = await Doctor.findById(doctor._id).select(
     "-password -refreshToken"
   );
-
-  if (!createdUser) {
+  if (!createdDoctor) {
     throw new ApiError(500, "Something went wrong while regestring the user");
   }
   return res
     .status(201)
-    .json(new ApiResponce(200, createdUser, "User regestered Sussesfully"));
+    .json(new ApiResponce(200, createdDoctor, "User regestered Sussesfully"));
 });
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -85,13 +69,19 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   // Here is an alternative of above code based on logic discussed in video:
-  // if (!(username || email)) {
-  //     throw new ApiError(400, "username or email is required")
+  if (!email) {
+    throw new ApiError(400, "username or email is required");
+  }
 
-  // }
-
-  const user = await User.findOne({
-    $or: [{ username }, { email }],
+  const userType = req.userType;
+   let UserModel;
+  if (userType === 'doctor') {
+    UserModel = Doctor;
+  } else if (userType === 'patient') {
+    UserModel = Patient;
+  }
+  const user = await UserModel.findOne({
+    $or: [{ email }],
   });
 
   if (!user) {
@@ -108,7 +98,7 @@ const loginUser = asyncHandler(async (req, res) => {
     user._id
   );
 
-  const loggedInUser = await User.findById(user._id).select(
+  const loggedInUser = await UserModel.findById(user._id).select(
     "-password -refreshToken"
   );
 
@@ -154,4 +144,4 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponce(200, {}, "User logged Out"));
 });
 
-export { regesterUser, loginUser, logoutUser };
+export { registerDoctor, loginUser, logoutUser };
