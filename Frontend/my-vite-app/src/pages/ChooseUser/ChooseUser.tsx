@@ -92,7 +92,12 @@ function ChooseUser() {
           </button>{" "}
           <p className="text-gray-600 font-bold">
             Already have an account?
-            <span className="text-blue-500 cursor-pointer">Login</span>
+            <span
+              className="text-blue-500 cursor-pointer"
+              onClick={() => navigate("/login")}
+            >
+              Login
+            </span>
           </p>
         </div>
       </div>

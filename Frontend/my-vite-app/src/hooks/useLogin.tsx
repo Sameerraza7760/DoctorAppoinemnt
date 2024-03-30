@@ -27,11 +27,13 @@ const useLogin = (url: string, Schema: SchemaType) => {
         },
       });
       setShowToast(true);
-      if (userType === "doctor") {
-        navigate("/doctorDashboard");
-        return;
-      }
-      navigate("patientDashboard");
+      setTimeout(() => {
+        navigate(`/${userType}/dashboard`);
+      }, 2000);
+      console.log(response.data.data.accessToken);
+
+      localStorage.setItem("accessToken", response.data.data.accessToken);
+      // navigate("patientDashboard");
     } catch (error: any) {
       setServerError(error.message);
       setTimeout(() => {

@@ -2,12 +2,13 @@ import { asyncHandler } from "../utills/asyncHandler.js";
 import { Doctor } from "../models/doctor.models.js";
 import { ApiError } from "../utills/ApiError.js";
 import { ApiResponce } from "../utills/ApiResponce.js";
+import { Patient } from "../models/patient.models.js";
 const checkExistingUser = async (model) => {
   return await model.findOne({ $or: [{ email }] });
 };
-const generateAccsessAndRefereshTokens = async (userId) => {
+const generateAccsessAndRefereshTokens = async (userId, UserModel) => {
   try {
-    const user = await Doctor.findById(userId);
+    const user = await UserModel.findById(userId);
     const accessToken = await user.generateAccessToken();
     const refreshToken = await user.generateRefreshToken();
     user.refreshToken = refreshToken;
@@ -17,40 +18,63 @@ const generateAccsessAndRefereshTokens = async (userId) => {
     throw new ApiError(500, error.message);
   }
 };
-const registerDoctor = asyncHandler(async (req, res) => {
-  const {
-    fullName,
-    email,
-    gender,
-    phoneNumber,
-    address,
-    password,
-    specialization,
-  } = req.body;
+const registerUser = asyncHandler(async (req, res) => {
+  const { fullName, email, gender, phoneNumber, address, password } = req.body;
 
-  const existedUser = await Doctor.findOne({ $or: [{ email }] });
+  // Extract userType from the request object
+  const { userType } = req;
+
+  // Define UserModel based on userType
+  let UserModel;
+  let userObject;
+
+  if (userType === "doctor") {
+    // If the user is a doctor, extract specialization from the request body
+    const { specialization } = req.body;
+
+    // Set UserModel to Doctor and construct userObject with specialization
+    UserModel = Doctor;
+    userObject = {
+      fullName: fullName.toLowerCase(),
+      email,
+      gender,
+      phoneNumber,
+      address,
+      password,
+      specialization, // Add specialization to the user object
+    };
+  } else if (userType === "patient") {
+    // If the user is a patient, extract maritalStatus from the request body
+    const { maritalStatus } = req.body;
+
+    // Set UserModel to Patient and construct userObject with maritalStatus
+    UserModel = Patient;
+    userObject = {
+      fullName: fullName.toLowerCase(),
+      email,
+      gender,
+      phoneNumber,
+      address,
+      password,
+      maritalStatus,
+    };
+  }
+
+  // Check if a user with the same email exists
+  const existedUser = await UserModel.findOne({ email });
   if (existedUser) {
-    throw new ApiError(409, "User with email or username alrady exists");
+    throw new ApiError(409, "User with email already exists");
   }
-  const doctor = await Doctor.create({
-    fullName: fullName.toLowerCase(),
-    email,
-    gender,
-    phoneNumber,
-    address,
-    password,
-    specialization,
-  });
 
-  const createdDoctor = await Doctor.findById(doctor._id).select(
-    "-password -refreshToken"
-  );
-  if (!createdDoctor) {
-    throw new ApiError(500, "Something went wrong while regestring the user");
-  }
-  return res
-    .status(201)
-    .json(new ApiResponce(200, createdDoctor, "User regestered Sussesfully"));
+  // Create a new user with the constructed userObject
+  const user = await UserModel.create(userObject);
+
+  // Return the created user
+  res.status(201).json({
+    status: 201,
+    data: user,
+    message: "User registered successfully",
+  });
 });
 
 const loginUser = asyncHandler(async (req, res) => {
@@ -74,10 +98,10 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   const userType = req.userType;
-   let UserModel;
-  if (userType === 'doctor') {
+  let UserModel;
+  if (userType === "doctor") {
     UserModel = Doctor;
-  } else if (userType === 'patient') {
+  } else if (userType === "patient") {
     UserModel = Patient;
   }
   const user = await UserModel.findOne({
@@ -95,7 +119,8 @@ const loginUser = asyncHandler(async (req, res) => {
   }
 
   const { accessToken, refreshToken } = await generateAccsessAndRefereshTokens(
-    user._id
+    user._id,
+    UserModel
   );
 
   const loggedInUser = await UserModel.findById(user._id).select(
@@ -144,4 +169,4 @@ const logoutUser = asyncHandler(async (req, res) => {
     .json(new ApiResponce(200, {}, "User logged Out"));
 });
 
-export { registerDoctor, loginUser, logoutUser };
+export { registerUser, loginUser, logoutUser };
