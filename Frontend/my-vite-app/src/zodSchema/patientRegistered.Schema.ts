@@ -5,6 +5,6 @@ export const patientSchema = object({
   password: string().min(6),
   address: string().min(2).max(100),
   gender: string().min(3),
-  martialstatus: string().min(2).max(100),
+  maritalStatus: string().min(2).max(100),
   phoneNumber:string().min(11),
 });

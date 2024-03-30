@@ -1,7 +1,7 @@
-.background-container {
+.background-containerForDoctor {
     width: 100%; /* Set the width to 100% to fill the parent container */
     height: 100%; /* Set the height to fill the parent container */
-    background-image: url("https://cdn.pixabay.com/photo/2017/03/14/03/20/woman-2141808_1280.jpg"); /* Set background image */
+    background-image: url(./../../assets/doctorImage.jpg); /* Set background image */
     background-size: cover; /* Cover the entire container */
     background-position: center; /* Center the background image */
     opacity: 0.7; /* Set opacity to 0.1 for very light effect (adjust as needed) */

@@ -3,8 +3,10 @@ import ToastDanger from "../../components/Toast/ToastDanger";
 import useRegistration from "../../hooks/useRegistration";
 import { patientSchema } from "../../zodSchema/patientRegistered.Schema";
 import ToastSuccsess from "../../components/Toast/ToastSuccsess";
+import { useNavigate } from "react-router-dom";
 import "./style.css";
 function PatientRegistered() {
+  const navigate = useNavigate();
   const {
     onSubmit,
     showToast,
@@ -13,7 +15,7 @@ function PatientRegistered() {
     handleSubmit,
     serverError,
   } = useRegistration(
-    "http://localhost:8000/api/v1/users/register/patient",
+    "http://localhost:8000/api/v1/users/register",
     patientSchema
   );
 
@@ -40,7 +42,6 @@ function PatientRegistered() {
               Email address
             </label>
           </div>
-
           <div className="relative z-0 w-full mb-5 group">
             <input
               type="password"
@@ -114,7 +115,7 @@ function PatientRegistered() {
             <div className="relative z-0 w-full mb-5 group">
               <input
                 type="text"
-                {...register("martialstatus")}
+                {...register("maritalStatus")}
                 name="martialstatus"
                 id="floating_company"
                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
@@ -126,7 +127,6 @@ function PatientRegistered() {
               </label>
             </div>
           </div>
-
           <button
             type="submit"
             className="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm w-full sm:w-auto px-5 py-2.5 text-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
@@ -136,11 +136,20 @@ function PatientRegistered() {
             ) : (
               "Submit"
             )}
-          </button>
+          </button>{" "}
+          <p className="text-gray-600 font-bold">
+            Already have an account?
+            <span
+              className="text-blue-500 cursor-pointer"
+              onClick={() => navigate("/login")}
+            >
+              Login
+            </span>
+          </p>
         </form>
       </div>{" "}
       <div className="w-[50%] p-8 hidden sm:block ">
-        <div className="w-full background-container"></div>
+        <div className="w-full background-containerForPatient"></div>
       </div>{" "}
       {showToast && <ToastSuccsess Title="Registered Successful" />}{" "}
       {serverError && <ToastDanger error={serverError} />}

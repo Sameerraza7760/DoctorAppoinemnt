@@ -45,6 +45,7 @@ const PatientSchema = new Schema(
     refreshToken: {
       type: String,
     },
+    maritalStatus: { type: String, required: true, index: true, trim: true },
   },
   { timestamps: true }
 );

@@ -2,10 +2,13 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
 import { z } from "zod";
-import axios from "axios"; 
+import axios from "axios";
 import { useUserContext } from "../contexts/UserContexts/UserProvider";
+import { useNavigate } from "react-router-dom";
+
 type SchemaType = z.ZodObject<any>;
 const useRegistration = (url: string, Schema: SchemaType) => {
+  const navigate = useNavigate();
   const { userType } = useUserContext();
   const {
     register,
@@ -21,11 +24,11 @@ const useRegistration = (url: string, Schema: SchemaType) => {
       const response = await axios.post(url, data, {
         headers: {
           "Content-Type": "application/json",
+          "User-Type": userType,
         },
       });
       setShowToast(true);
-      if (userType==='doctor') {
-      }
+      navigate("/login");
       console.log("Registration successful", response.data);
     } catch (error: any) {
       setServerError(error.message);

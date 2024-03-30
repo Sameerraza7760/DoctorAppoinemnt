@@ -57,8 +57,8 @@ function Header() {
                 Help
               </a>
             </li>{" "}
-            <button
-              onClick={() => navigate("/chooseUser")}
+            <button onClick={handleLogout}
+              // onClick={() => navigate("/chooseUser")}
               className="inline-flex ml-5 text-gray-400 border border-gray-700 px-6 outline-4 focus:outline-none rounded"
             >
               Login
