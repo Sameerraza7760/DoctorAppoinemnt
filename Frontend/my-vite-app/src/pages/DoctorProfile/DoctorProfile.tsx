@@ -2,7 +2,7 @@ import "./style.css";
 function DoctorProfile() {
   return (
     <div className="bg-white w-full flex flex-col gap-5 px-3 md:px-16 lg:px-28 md:flex-row text-[#161931]">
-      <main className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4">
+      <main className="w-full min-h-screen py-1 md:w-2/3 lg:w-3/4 mx-auto">
         <div className="p-2 md:p-4">
           <div className="w-full px-6 pb-8 mt-8 sm:max-w-xl sm:rounded-lg ">
             <h2 className="pl-6 text-2xl font-bold sm:text-xl">
@@ -114,9 +114,9 @@ function DoctorProfile() {
           </div>
         </div>
       </main>{" "}
-      <div className="w-[70%] p-8 hidden sm:block ">
+      {/* <div className="w-[70%] p-8 hidden sm:block ">
         <div className="w-full background-container"></div>
-      </div>
+      </div> */}
     </div>
   );
 }

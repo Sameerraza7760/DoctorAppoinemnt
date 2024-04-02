@@ -28,7 +28,7 @@ const useLogin = (url: string, Schema: SchemaType) => {
       });
       setShowToast(true);
       setTimeout(() => {
-        navigate(`/${userType}/dashboard`);
+        navigate(`/${userType}/home`);
       }, 2000);
       console.log(response.data.data.accessToken);
 

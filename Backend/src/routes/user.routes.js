@@ -3,7 +3,7 @@ import {
   loginUser,
   logoutUser,
   registerUser,
-} from "../controllers/doctor.controller.js";
+} from "../controllers/user.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 import { checkUserType } from "../middlewares/checkUserType.middleware.js";
 const router = Router();

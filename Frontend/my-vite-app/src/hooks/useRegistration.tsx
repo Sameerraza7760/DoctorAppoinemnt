@@ -1,13 +1,13 @@
 import { zodResolver } from "@hookform/resolvers/zod";
+import axios from "axios";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
-import { z } from "zod";
-import axios from "axios";
-import { useUserContext } from "../contexts/UserContexts/UserProvider";
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../contexts/UserContexts/UserProvider";
+import { doctorSchema } from "../zodSchema/docterRegistered.Scheme";
+import { patientSchema } from "../zodSchema/patientRegistered.Schema";
 
-type SchemaType = z.ZodObject<any>;
-const useRegistration = (url: string, Schema: SchemaType) => {
+const useRegistration = (url: string) => {
   const navigate = useNavigate();
   const { userType } = useUserContext();
   const {
@@ -15,7 +15,7 @@ const useRegistration = (url: string, Schema: SchemaType) => {
     handleSubmit,
     formState: { isSubmitting },
   } = useForm({
-    resolver: zodResolver(Schema),
+    resolver: zodResolver(userType === "doctor" ? doctorSchema : patientSchema),
   });
   const [showToast, setShowToast] = useState(false);
   const [serverError, setServerError] = useState<string | undefined>();
