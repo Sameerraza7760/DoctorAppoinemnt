@@ -1,28 +1,31 @@
 import axios from "axios";
 import "./../style.css";
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../../contexts/UserContexts/UserProvider";
 function Header() {
+  const { userType } = useUserContext();
   const navigate = useNavigate();
-  const handleLogout = async () => {
-    try {
-      const accsessToken = localStorage.getItem("accessToken");
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/users/logout",
-        {},
-        {
-          headers: {
-            Authorization: `Bearer ${accsessToken}`,
-          },
-        }
-      );
-      console.log(response.data);
-      alert("Logout successful");
-      localStorage.removeItem("accessToken");
-    } catch (error: any) {
-      console.error("Error logging out:", error.message);
-      alert("Logout failed");
-    }
-  };
+  // const handleLogout = async () => {
+  //   try {
+  //     const accsessToken = localStorage.getItem("accessToken");
+  //     const response = await axios.post(
+  //       "http://localhost:8000/api/v1/users/logout",
+  //       {},
+  //       {
+  //         headers: {
+  //           Authorization: `Bearer ${accsessToken}`,
+  //           "User-Type": userType,
+  //         },
+  //       },
+  //     );
+  //     console.log(response.data);
+  //     alert("Logout successful");
+  //     localStorage.removeItem("accessToken");
+  //   } catch (error: any) {
+  //     console.error("Error logging out:", error.message);
+  //     alert("Logout failed");
+  //   }
+  // };
   return (
     <header className="text-gray-600 body-font border-b border-gray-300">
       <div className="container mx-auto flex flex-wrap p-1 flex-col md:flex-row items-center">
@@ -57,8 +60,9 @@ function Header() {
                 Help
               </a>
             </li>{" "}
-            <button onClick={handleLogout}
-              // onClick={() => navigate("/chooseUser")}
+            <button
+              // onClick={handleLogout}
+              onClick={() => navigate("/chooseUser")}
               className="inline-flex ml-5 text-gray-400 border border-gray-700 px-6 outline-4 focus:outline-none rounded"
             >
               Login

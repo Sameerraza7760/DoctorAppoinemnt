@@ -1,9 +1,8 @@
 import { CircularProgress } from "@mui/material";
+import { useNavigate } from "react-router-dom";
+import ToastDanger from "../../components/Toast/ToastDanger";
 import ToastSuccsess from "../../components/Toast/ToastSuccsess";
 import useRegistration from "../../hooks/useRegistration";
-import ToastDanger from "../../components/Toast/ToastDanger";
-import { doctorSchema } from "../../zodSchema/docterRegistered.Scheme";
-import { useNavigate } from "react-router-dom";
 import "./style.css";
 function DocterRegestered() {
   const navigate = useNavigate();
@@ -14,10 +13,7 @@ function DocterRegestered() {
     register,
     handleSubmit,
     serverError,
-  } = useRegistration(
-    "http://localhost:8000/api/v1/users/register",
-    doctorSchema
-  );
+  } = useRegistration("http://localhost:8000/api/v1/users/register");
 
   return (
     <div className="min-h-screen flex w-full">

@@ -3,16 +3,15 @@ import { Doctor } from "../models/doctor.models.js";
 import { ApiError } from "../utills/ApiError.js";
 import { ApiResponce } from "../utills/ApiResponce.js";
 import { Patient } from "../models/patient.models.js";
-const checkExistingUser = async (model) => {
-  return await model.findOne({ $or: [{ email }] });
-};
+import { getUserModel } from "../utills/getUserModel.js";
 const generateAccsessAndRefereshTokens = async (userId, UserModel) => {
   try {
     const user = await UserModel.findById(userId);
     const accessToken = await user.generateAccessToken();
     const refreshToken = await user.generateRefreshToken();
     user.refreshToken = refreshToken;
-    await user.save({ validateBeforeSave: false }); // Await the save operation
+    await user.save({ validateBeforeSave: false });
+
     return { accessToken, refreshToken };
   } catch (error) {
     throw new ApiError(500, error.message);
@@ -21,36 +20,25 @@ const generateAccsessAndRefereshTokens = async (userId, UserModel) => {
 const registerUser = asyncHandler(async (req, res) => {
   const { fullName, email, gender, phoneNumber, address, password } = req.body;
 
-  // Extract userType from the request object
   const { userType } = req;
+  const UserModel = getUserModel(userType);
 
-  // Define UserModel based on userType
-  let UserModel;
   let userObject;
-
-  if (userType === "doctor") {
-    // If the user is a doctor, extract specialization from the request body
+  if (UserModel === Doctor) {
     const { specialization } = req.body;
-
-    // Set UserModel to Doctor and construct userObject with specialization
-    UserModel = Doctor;
     userObject = {
-      fullName: fullName.toLowerCase(),
+      fullName,
       email,
       gender,
       phoneNumber,
       address,
       password,
-      specialization, // Add specialization to the user object
+      specialization,
     };
-  } else if (userType === "patient") {
-    // If the user is a patient, extract maritalStatus from the request body
+  } else if (UserModel === Patient) {
     const { maritalStatus } = req.body;
-
-    // Set UserModel to Patient and construct userObject with maritalStatus
-    UserModel = Patient;
     userObject = {
-      fullName: fullName.toLowerCase(),
+      fullName,
       email,
       gender,
       phoneNumber,
@@ -60,16 +48,13 @@ const registerUser = asyncHandler(async (req, res) => {
     };
   }
 
-  // Check if a user with the same email exists
   const existedUser = await UserModel.findOne({ email });
   if (existedUser) {
     throw new ApiError(409, "User with email already exists");
   }
 
-  // Create a new user with the constructed userObject
   const user = await UserModel.create(userObject);
 
-  // Return the created user
   res.status(201).json({
     status: 201,
     data: user,
@@ -78,13 +63,6 @@ const registerUser = asyncHandler(async (req, res) => {
 });
 
 const loginUser = asyncHandler(async (req, res) => {
-  // req body -> data
-  // username or email
-  //find the user
-  //password check
-  //access and referesh token
-  //send cookie
-
   const { email, username, password } = req.body;
   console.log(email);
 
@@ -92,18 +70,12 @@ const loginUser = asyncHandler(async (req, res) => {
     throw new ApiError(400, "username or email is required");
   }
 
-  // Here is an alternative of above code based on logic discussed in video:
   if (!email) {
     throw new ApiError(400, "username or email is required");
   }
 
   const userType = req.userType;
-  let UserModel;
-  if (userType === "doctor") {
-    UserModel = Doctor;
-  } else if (userType === "patient") {
-    UserModel = Patient;
-  }
+  const UserModel = getUserModel(userType);
   const user = await UserModel.findOne({
     $or: [{ email }],
   });
@@ -145,7 +117,9 @@ const loginUser = asyncHandler(async (req, res) => {
 });
 
 const logoutUser = asyncHandler(async (req, res) => {
-  await User.findByIdAndUpdate(
+  const UserModel = getUserModel(req.userType);
+
+  await UserModel.findByIdAndUpdate(
     req.user._id,
     {
       $unset: {
@@ -162,11 +136,11 @@ const logoutUser = asyncHandler(async (req, res) => {
     secure: true,
   };
 
+  // Clear the cookies containing the access and refresh tokens
   return res
     .status(200)
     .clearCookie("accessToken", options)
     .clearCookie("refreshToken", options)
     .json(new ApiResponce(200, {}, "User logged Out"));
 });
-
 export { registerUser, loginUser, logoutUser };
