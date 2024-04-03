@@ -13,7 +13,9 @@ app.use(cookieParser());
 // in this when the middleware is /api/v1/users so you give the controlled userRouter (so go userRouter)
 
 import userRouter from "./routes/user.routes.js";
+import doctorRouter from './routes/doctor.routes.js'
 app.use("/api/v1/users", userRouter);
+app.use("/api/v1/doctors", doctorRouter);
 
 app.use((err, req, res, next) => {
   console.error(err.stack);

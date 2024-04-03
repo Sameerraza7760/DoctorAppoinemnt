@@ -10,6 +10,9 @@ import Signin from "../pages/Signin/Signin";
 import DoctorLayout from "../components/Layout/DoctorSideBarLayout";
 import DoctorHome from "../pages/DoctorRelated/DoctorHome/DoctorHome";
 import DoctorSidebarPatient from "../pages/DoctorSidebarPatient/DoctorSidebarPatient";
+import DoctorAppointment from "../pages/DoctorRelated/DoctorAppoinment/DoctorAppoinment";
+import DoctorNotification from "../pages/DoctorRelated/DoctorNotification/DoctorNotification";
+import DoctorsList from "../pages/PatientsRelated/DoctorsList/DoctorsList";
 const AppRouter = () => {
   return (
     <Routes>
@@ -19,7 +22,8 @@ const AppRouter = () => {
       <Route path="/register/doctor" element={<DocterRegestered />} />
       <Route path="/register/patient" element={<PatientRegistered />} />{" "}
       <Route path="/login" element={<Signin />} />
-      <Route path="/chooseUser" element={<ChooseUser />} />
+      <Route path="/chooseUser" element={<ChooseUser />} />{" "}
+      <Route path="/doctorsList" element={<DoctorsList />} />
       {/* <Route
         path="/doctor/dashboard"
         element={
@@ -49,6 +53,22 @@ const AppRouter = () => {
         element={
           <DoctorLayout>
             <DoctorProfile />
+          </DoctorLayout>
+        }
+      />
+      <Route
+        path="/doctor/Appoinments"
+        element={
+          <DoctorLayout>
+            <DoctorAppointment />
+          </DoctorLayout>
+        }
+      />
+      <Route
+        path="/doctor/Notifications"
+        element={
+          <DoctorLayout>
+            <DoctorNotification />
           </DoctorLayout>
         }
       />

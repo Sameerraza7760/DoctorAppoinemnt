@@ -1,0 +1,9 @@
+.bg-DoctorSidebar {
+    background-color: #f0f2f5; /* Fallback color if the image is unavailable */
+    background-image: linear-gradient(to bottom, rgba(0, 0, 0, 0.4), rgba(0, 0, 0, 0.8)), url(./../../assets/doctorImage.jpg);
+    background-size: cover; /* Cover the entire container */
+    background-position: center; /* Center the background image */
+    opacity: 0.9; /* Adjust opacity as needed */
+    border-right: 1px solid #ddd; /* Optional: add a border to the right for separation */
+  }
+  

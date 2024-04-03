@@ -123,7 +123,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     req.user._id,
     {
       $unset: {
-        refreshToken: 1, // this removes the field from document
+        refreshToken: 1, 
       },
     },
     {
@@ -136,7 +136,6 @@ const logoutUser = asyncHandler(async (req, res) => {
     secure: true,
   };
 
-  // Clear the cookies containing the access and refresh tokens
   return res
     .status(200)
     .clearCookie("accessToken", options)
