@@ -1,8 +1,7 @@
+import { SearchOutlined, UserOutlined } from "@ant-design/icons";
+import { Avatar, Input, List, Typography } from "antd";
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import { Avatar, List, Input, Typography, Space } from "antd";
-import { UserOutlined, SearchOutlined } from "@ant-design/icons";
-import DoctorSidebar from "../../components/Sidebar/DoctorSidebar";
 const { Search } = Input;
 const { Text } = Typography;
 
@@ -25,7 +24,7 @@ function DoctorSidebarPatient() {
     // Add more patient data as needed
   ]);
 
-  const handleSearch = (value) => {
+  const handleSearch = (value:any) => {
     // Implement search logic here
     // Example: Filter patients whose name contains the search value
     const filteredPatients = patients.filter((patient) =>
@@ -36,49 +35,49 @@ function DoctorSidebarPatient() {
 
   return (
     <>
-      <div className="container w-full mx-auto">
-        <div className="header">
-          <Typography.Title
-            level={2}
-            style={{ marginBottom: 16, color: "#1890ff" }}
-          >
+      <div className="container mx-auto px-4 py-8">
+        <div className="flex justify-between items-center mb-8">
+          <Typography.Title level={2} className="text-2xl font-semibold text-gray-800">
             Patient List
           </Typography.Title>
           <Search
             placeholder="Search patients"
             onSearch={handleSearch}
-            prefix={<SearchOutlined style={{ color: "#1890ff" }} />}
+            prefix={<SearchOutlined />}
             style={{ width: 300 }}
+            className="ml-auto"
           />
         </div>
         <List
           itemLayout="horizontal"
           dataSource={patients}
           renderItem={(patient) => (
-            <List.Item className="patient-item">
-              <List.Item.Meta
-                avatar={
-                  <Avatar src={patient.imageUrl} icon={<UserOutlined />} />
-                }
-                title={
+            <List.Item className="bg-white rounded-lg shadow-md p-4 mb-4">
+              <div className="flex items-center">
+                <Avatar
+                  src={patient.imageUrl}
+                  icon={<UserOutlined />}
+                  className="mr-4"
+                />
+                <div>
                   <Link
                     to={`/patient-profile/${patient.id}`}
-                    style={{ fontWeight: "bold", color: "#1890ff" }}
+                    className="font-semibold text-gray-900 hover:underline"
                   >
                     {patient.name}
                   </Link>
-                }
-                description={
-                  <Space size="small">
-                    <Text type="secondary">Age: {patient.age}</Text>
+                  <div className="flex mt-1">
+                    <Text type="secondary" className="mr-4">
+                      Age: {patient.age}
+                    </Text>
                     <Text type="secondary">Gender: {patient.gender}</Text>
-                  </Space>
-                }
-              />
-              <div className="action-buttons">
+                  </div>
+                </div>
+              </div>
+              <div className="ml-auto">
                 <Link
                   to={`/patient-profile/${patient.id}`}
-                  className="view-profile-btn"
+                  className="text-blue-500 hover:underline"
                 >
                   View Profile
                 </Link>

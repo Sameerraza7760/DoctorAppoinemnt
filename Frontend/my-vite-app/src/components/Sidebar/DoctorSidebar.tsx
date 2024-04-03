@@ -5,11 +5,14 @@ import {
   SettingOutlined,
   UserOutlined,
   HomeOutlined,
+  NotificationFilled,
 } from "@ant-design/icons";
+
+import "./style.css";
 import { Link } from "react-router-dom";
 const DoctorSidebar = () => {
   return (
-    <div className="bg-blue-800 text-white h-screen w-64 flex flex-col justify-between">
+    <div className="bg-DoctorSidebar bg-blue-800 text-white h-screen w-64 flex flex-col justify-between">
       <div className="p-6">
         <h2 className="text-2xl text-center font-serif font-bold mb-6">
           Doctor Dashboard
@@ -28,7 +31,7 @@ const DoctorSidebar = () => {
           </li>
           <li>
             <Link
-              to="/appointments"
+              to="/doctor/Appoinments"
               className="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-blue-700 transition duration-300"
             >
               <span className="flex items-center text-lg font-medium">
@@ -55,6 +58,17 @@ const DoctorSidebar = () => {
             >
               <span className="flex items-center text-lg font-medium">
                 <FileOutlined className="mr-2" /> Prescriptions
+              </span>
+              <i className="fas fa-chevron-right"></i>
+            </Link>
+          </li>
+          <li>
+            <Link
+              to="/doctor/Notifications"
+              className="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-blue-700 transition duration-300"
+            >
+              <span className="flex items-center text-lg font-medium">
+                <NotificationFilled className="mr-2" /> Notifications
               </span>
               <i className="fas fa-chevron-right"></i>
             </Link>

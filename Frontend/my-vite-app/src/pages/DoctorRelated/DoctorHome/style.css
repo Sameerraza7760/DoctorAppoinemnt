@@ -1,0 +1,42 @@
+.bg-doctor-Statistics {
+  background-image: linear-gradient(
+      to bottom,
+      rgba(207, 163, 163, 0.4),
+      rgba(0, 0, 0, 0.8)
+    ),
+    url("./../../../assets/patientStatics.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.8;
+  border-right: 1px solid #ddd;
+  color: #ffffff; /* Set text color to white */
+}
+.appoinment {
+  background-image: linear-gradient(
+      to bottom,
+      rgba(207, 163, 163, 0.4),
+      rgba(0, 0, 0, 0.8)
+    ),
+    url("./../../../assets/appoinment.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.8;
+  border-right: 1px solid #ddd;
+  color: #ffffff; /* Set text color to white */
+}
+.upcommingTask {
+  background-image: linear-gradient(
+      to bottom,
+      rgba(207, 163, 163, 0.4),
+      rgba(0, 0, 0, 0.8)
+    ),
+    url("./../../../assets/upcommingTask.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  opacity: 0.8;
+  border-right: 1px solid #ddd;
+  color: #ffffff; /* Set text color to white */
+}

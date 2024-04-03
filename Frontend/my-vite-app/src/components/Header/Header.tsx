@@ -33,7 +33,12 @@ function Header() {
           <img className="headerImage" src="" alt="" />
         </a>
         <nav className="md:mr-auto flex flex-wrap items-center text-base justify-center ml-9">
-          <a className="mr-5 hover:text-gray-900 font-bold">Find Doctors</a>
+          <a
+            className="mr-5 hover:text-gray-900 font-bold"
+            onClick={() => navigate("/doctorsList")}
+          >
+            Find Doctors
+          </a>
           <a className="mr-5 hover:text-gray-900 font-bold">Video Consult</a>
           <a className="mr-5 hover:text-gray-900 font-bold">Medicines</a>
           <a className="mr-5 hover:text-gray-900 font-bold">Lab Tests</a>
