@@ -6,11 +6,16 @@ import {
   UserOutlined,
   HomeOutlined,
   NotificationFilled,
+  LogoutOutlined,
 } from "@ant-design/icons";
 
+import ToastDanger from "../Toast/ToastDanger";
+import ToastSuccsess from "../Toast/ToastSuccsess";
+import useLogout from "../../hooks/useLogout";
 import "./style.css";
 import { Link } from "react-router-dom";
 const DoctorSidebar = () => {
+  const { logout, serverError, showToast } = useLogout();
   return (
     <div className="bg-DoctorSidebar bg-blue-800 text-white h-screen w-64 flex flex-col justify-between">
       <div className="p-6">
@@ -95,11 +100,24 @@ const DoctorSidebar = () => {
               <i className="fas fa-chevron-right"></i>
             </Link>
           </li>
+          <li onClick={logout}>
+            <Link
+              to=""
+              className="flex items-center justify-between px-4 py-3 rounded-lg hover:bg-blue-700 transition duration-300"
+            >
+              <span className="flex items-center text-lg font-medium">
+                <LogoutOutlined className="mr-2" /> Logout
+              </span>
+              <i className="fas fa-chevron-right"></i>
+            </Link>
+          </li>
         </ul>
       </div>
       <div className="p-6">
         <p className="text-sm">&copy; 2024 Your Clinic</p>
-      </div>
+      </div>{" "}
+      {showToast && <ToastSuccsess Title="Logout Succsesfully" />}{" "}
+      {serverError && <ToastDanger error={serverError} />}
     </div>
   );
 };

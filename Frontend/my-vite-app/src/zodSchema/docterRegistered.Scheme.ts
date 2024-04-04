@@ -1,4 +1,5 @@
-import { object, string } from "zod";
+import { object, string, number } from "zod";
+
 export const doctorSchema = object({
   fullName: string().min(2).max(50),
   email: string().email(),
@@ -6,5 +7,9 @@ export const doctorSchema = object({
   address: string().min(2).max(100),
   gender: string().min(3),
   specialization: string().min(2).max(100),
-  phoneNumber:string().min(11),
-});
+  phoneNumber: number().min(11),
+  experience: number().min(0), 
+  feesPerConsultation: number().min(0),
+  timings: string(), 
+  qualifications: string(), 
+}); 

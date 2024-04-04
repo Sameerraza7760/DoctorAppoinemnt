@@ -5,15 +5,15 @@ const useResourceFetch = (url: string) => {
   const fetchData = async () => {
     try {
       const response = await axios.get(url);
-      return response.data; // Axios already returns response data directly
+      return response.data;
     } catch (error) {
-      throw new Error("Failed to fetch data"); // Throw error for error handling
+      throw new Error("Failed to fetch data");
     }
   };
 
   return useQuery({
     queryKey: [url],
-    queryFn: fetchData
+    queryFn: fetchData,
   });
 };
 

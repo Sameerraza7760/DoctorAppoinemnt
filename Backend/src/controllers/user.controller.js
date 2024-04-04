@@ -18,43 +18,45 @@ const generateAccsessAndRefereshTokens = async (userId, UserModel) => {
   }
 };
 const registerUser = asyncHandler(async (req, res) => {
-  const { fullName, email, gender, phoneNumber, address, password } = req.body;
-
   const { userType } = req;
   const UserModel = getUserModel(userType);
 
-  let userObject;
+  // Extract common user properties
+  const { fullName, email, gender, phoneNumber, address, password } = req.body;
+  let userObject = { fullName, email, gender, phoneNumber, address, password };
+
+  // Extend user object based on user type
   if (UserModel === Doctor) {
-    const { specialization } = req.body;
-    userObject = {
-      fullName,
-      email,
-      gender,
-      phoneNumber,
-      address,
-      password,
+    const {
       specialization,
+      timings,
+      experience,
+      qualifications,
+      feesPerConsultation,
+    } = req.body;
+    userObject = {
+      ...userObject,
+      specialization,
+      timings,
+      experience,
+      qualifications,
+      feesPerConsultation,
     };
   } else if (UserModel === Patient) {
     const { maritalStatus } = req.body;
-    userObject = {
-      fullName,
-      email,
-      gender,
-      phoneNumber,
-      address,
-      password,
-      maritalStatus,
-    };
+    userObject = { ...userObject, maritalStatus };
   }
 
+  // Check if user with the same email already exists
   const existedUser = await UserModel.findOne({ email });
   if (existedUser) {
     throw new ApiError(409, "User with email already exists");
   }
 
+  // Create new user
   const user = await UserModel.create(userObject);
 
+  // Respond with success message
   res.status(201).json({
     status: 201,
     data: user,
@@ -123,7 +125,7 @@ const logoutUser = asyncHandler(async (req, res) => {
     req.user._id,
     {
       $unset: {
-        refreshToken: 1, 
+        refreshToken: 1,
       },
     },
     {
@@ -142,4 +144,5 @@ const logoutUser = asyncHandler(async (req, res) => {
     .clearCookie("refreshToken", options)
     .json(new ApiResponce(200, {}, "User logged Out"));
 });
+
 export { registerUser, loginUser, logoutUser };
