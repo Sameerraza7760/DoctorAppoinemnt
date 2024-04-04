@@ -50,6 +50,23 @@ const DocterSchema = new Schema(
     refreshToken: {
       type: String,
     },
+    experience: {
+      type: String,
+      required: [true, "experience is required"],
+    },
+    feesPerConsultation: {
+      type: String,
+      required: [true, "fee is required"],
+    },
+
+    qualifications: {
+      type: String,
+      required: [true, "fee is required"],
+    },
+    timings: {
+      type: String,
+      required: [true, "work timing is required"],
+    },
   },
   { timestamps: true }
 );

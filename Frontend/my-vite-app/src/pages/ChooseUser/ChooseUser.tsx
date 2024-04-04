@@ -8,11 +8,8 @@ function ChooseUser() {
   const navigate = useNavigate();
   const handleUserSelection = (user: UserType) => {
     setUserType(user);
-    console.log(userType);
   };
-  useEffect(() => {
-    console.log(userType);
-  }, [userType]);
+  useEffect(() => {}, [userType]);
   return (
     <div className="bg-gray-100 min-h-screen">
       <div className="w-full bg-blue-600 h-[100px] p-6 text-center">

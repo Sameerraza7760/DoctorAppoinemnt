@@ -1,7 +1,7 @@
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import { useState } from "react";
-import { useForm } from "react-hook-form";
+import { FieldValues, SubmitHandler, useForm } from "react-hook-form";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../contexts/UserContexts/UserProvider";
 import { doctorSchema } from "../zodSchema/docterRegistered.Scheme";
@@ -19,7 +19,7 @@ const useRegistration = (url: string) => {
   });
   const [showToast, setShowToast] = useState(false);
   const [serverError, setServerError] = useState<string | undefined>();
-  const onSubmit = async (data: any) => {
+  const onSubmit: SubmitHandler<FieldValues> = async (data) => {
     try {
       const response = await axios.post(url, data, {
         headers: {
@@ -38,6 +38,7 @@ const useRegistration = (url: string) => {
       console.error("Error registering:", error.message);
     }
   };
+
   return {
     onSubmit,
     showToast,
