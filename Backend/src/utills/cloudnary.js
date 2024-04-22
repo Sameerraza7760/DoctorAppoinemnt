@@ -1,5 +1,5 @@
 import { v2 as cloudinary } from "cloudinary";
-
+import fs from "fs";
 cloudinary.config({
   cloud_name: process.env.CLOUDINARY_CLOUD_NAME,
   api_key: process.env.CLOUDINARY_API_KEY,
@@ -9,14 +9,17 @@ cloudinary.config({
 const uploadOnCloudinary = async (localFilePath) => {
   try {
     if (!localFilePath) return null;
-    const responce = await cloudinary.uploader.upload(localFilePath, {
+    const response = await cloudinary.uploader.upload(localFilePath, {
       resource_type: "auto",
     });
-    console.log("file upload on cloudinary succsessfully", responce.url);
-    return responce;
+    console.log("Cloudinary upload response:", response);
+    // if (!response.url) return;
+    return response;
   } catch (error) {
-    fs.unlinkSync(localFilePath); // this line is doing that to delete the temprory file from server deleted
+    console.error("Error uploading to Cloudinary:", error);
+    fs.unlinkSync(localFilePath);
     return null;
   }
 };
-export default { uploadOnCloudinary };
+
+export { uploadOnCloudinary };

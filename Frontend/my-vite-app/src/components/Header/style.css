@@ -1,0 +1,16 @@
+.loginHamBurger {
+  display: none;
+}
+@media (max-width: 1280px) {
+  .loginpart {
+    display: none !important;
+  }
+  .loginHamBurger {
+    display: block;
+  }
+}
+
+.headerImage {
+  content: url(./../../assets/practo.webp);
+  height: 70px;
+}

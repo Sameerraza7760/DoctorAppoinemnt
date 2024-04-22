@@ -1,4 +1,4 @@
-import './style.css';
+import "./style.css";
 function DoctorHome() {
   // Placeholder data
   const appointmentSummary = 25;
@@ -10,15 +10,17 @@ function DoctorHome() {
   ];
 
   return (
-    <div className="container mx-auto py-8">
+    <div className="container mx-auto py-8 w-full">
       <h2 className="text-3xl text-center font-serif font-semibold mb-4 text-blue-800">
         Doctor Dashboard
       </h2>
 
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      <div className="w-[90%] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-6">
         {/* Appointment Summary */}
         <div className="appoinment bg-white cursor-pointer p-6 rounded-md shadow-md transition duration-300 transform hover:scale-105 hover:bg-gray-100">
-          <h3 className="text-2xl text-white font-semibold mb-2">Appointment Summary</h3>
+          <h3 className="text-2xl text-white font-semibold mb-2">
+            Appointment Summary
+          </h3>
           <p className="text-white-600">
             {appointmentSummary} appointments scheduled
           </p>
@@ -26,7 +28,9 @@ function DoctorHome() {
 
         {/* Patient Statistics */}
         <div className="bg-doctor-Statistics cursor-pointer bg-white p-6 rounded-md shadow-md transition duration-300 transform hover:scale-105 hover:bg-gray-100">
-          <h3 className="text-2xl font-semibold mb-2 text-white ">Patient Statistics</h3>
+          <h3 className="text-2xl font-semibold mb-2 text-white ">
+            Patient Statistics
+          </h3>
           <p className="text-white">
             {patientStatistics} patients in the system
           </p>
@@ -40,9 +44,7 @@ function DoctorHome() {
           <ul className="space-y-2">
             {upcomingTasks.map((task) => (
               <li key={task.id}>
-                <span className="text-white font-semibold">
-                  {task.title}
-                </span>
+                <span className="text-white font-semibold">{task.title}</span>
                 <span className="text-white blue-600 ml-2">{task.time}</span>
               </li>
             ))}

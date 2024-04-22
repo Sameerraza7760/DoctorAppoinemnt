@@ -1,28 +1,21 @@
 import { CircularProgress } from "@mui/material";
-import { useUserContext } from "../../contexts/UserContexts/UserProvider";
 import useLogin from "../../hooks/useLogin";
 import { LoginFormSchema } from "../../zodSchema/loginSchema";
-import ToastDanger from "../../components/Toast/ToastDanger";
-import ToastSuccsess from "../../components/Toast/ToastSuccsess";
+
 import "./style.css";
 function Signin() {
-  const { userType } = useUserContext();
-  const {
-    onSubmit,
-    showToast,
-    isSubmitting,
-    register,
-    handleSubmit,
-    serverError,
-  } = useLogin(
-    "http://localhost:8000/api/v1/users/login", // in this userType should be doctor or patient come from the context
+  const { onSubmit, isSubmitting, register, handleSubmit } = useLogin(
+    "http://localhost:8000/api/v1/users/login",
     LoginFormSchema
   );
   return (
     <div className="min-h-screen flex w-full">
       {" "}
       <div className="w-full sm:w-[50%] bg-white p-8 ">
-        <form   onSubmit={handleSubmit(onSubmit)} className=" w-[90%] mt-[70px] mx-auto m-5">
+        <form
+          onSubmit={handleSubmit(onSubmit)}
+          className=" w-[90%] mt-[70px] mx-auto m-5"
+        >
           <div className="relative z-0 w-full mb-5 group">
             <input
               type="email"
@@ -65,8 +58,6 @@ function Signin() {
       <div className="w-[50%] p-8 hidden sm:block ">
         <div className="w-full background-container"></div>
       </div>
-      {showToast && <ToastSuccsess Title={"Login Successful"} />}{" "}
-      {serverError && <ToastDanger error={serverError} />}
     </div>
   );
 }

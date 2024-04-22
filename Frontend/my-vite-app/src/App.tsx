@@ -1,20 +1,17 @@
-import { ChakraProvider } from "@chakra-ui/react";
+import Modal from "./components/Modal/Modal";
 import AppRouter from "./Router/Router";
-import ErrorBoundary from "./components/ErrorBoundry/ErrorBoundry";
+
 import Footer from "./components/Foooter/Footer";
 import Header from "./components/Header/Header";
+import DoctorDetailPage from "./pages/DoctorDetail/DoctorDetailPage";
 function App() {
   return (
     <>
       {" "}
-      <ErrorBoundary>
-     
-          <Header />
-          <AppRouter />
-          <Footer />
-       
-      </ErrorBoundary>
-      {/* <DoctorSidebarPatient/>/ */}
+      <Header />
+      {/* <Modal /> */}
+      <AppRouter />
+      <Footer />
     </>
   );
 }

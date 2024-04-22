@@ -1,18 +1,15 @@
 import { CircularProgress } from "@mui/material";
 import { useNavigate } from "react-router-dom";
-import ToastDanger from "../../components/Toast/ToastDanger";
-import ToastSuccsess from "../../components/Toast/ToastSuccsess";
+
 import useRegistration from "../../hooks/useRegistration";
 import "./style.css";
 function PatientRegistered() {
   const navigate = useNavigate();
   const {
     onSubmit,
-    showToast,
     isSubmitting,
     register,
     handleSubmit,
-    serverError,
   } = useRegistration("http://localhost:8000/api/v1/users/register");
 
   return (
@@ -96,9 +93,9 @@ function PatientRegistered() {
           </div>
           <div className="grid md:grid-cols-2 md:gap-6">
             <div className="relative z-0 w-full mb-5 group">
-              <input
-                type="text"
-                {...register("phoneNumber")}
+            <input
+                type="number"
+                {...register("phoneNumber", { valueAsNumber: true })}
                 id="floating_phone"
                 className="block py-2.5 px-0 w-full text-sm text-gray-900 bg-transparent border-0 border-b-2 border-gray-300 appearance-none dark:text-white dark:border-gray-600 dark:focus:border-blue-500 focus:outline-none focus:ring-0 focus:border-blue-600 peer"
                 placeholder=" "
@@ -147,8 +144,6 @@ function PatientRegistered() {
       <div className="w-[50%] p-8 hidden sm:block ">
         <div className="w-full background-containerForPatient"></div>
       </div>{" "}
-      {showToast && <ToastSuccsess Title="Registered Successful" />}{" "}
-      {serverError && <ToastDanger error={serverError} />}
     </div>
   );
 }

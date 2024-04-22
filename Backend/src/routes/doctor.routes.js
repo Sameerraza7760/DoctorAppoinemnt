@@ -1,10 +1,19 @@
-
-import { Router } from 'express';
-import { getDoctors } from '../controllers/doctor.controller.js';
+import { Router } from "express";
+import {
+  getDoctors,
+  addAdditionalDetail,
+  getDoctorDetails,
+} from "../controllers/doctor.controller.js";
+import { verifyJWT } from "../middlewares/auth.middleware.js";
+import { upload } from "./../middlewares/multer.middleware.js";
 
 const router = Router();
 
-// Define routes related to doctors
-router.route('/').get(getDoctors);
+router.route("/").get(getDoctors);
+router
+  .route("/addAdditionalDetail")
+  .post(upload.single("doctorImage"), verifyJWT, addAdditionalDetail);
+
+router.get("/:doctorId", getDoctorDetails);
 
 export default router;

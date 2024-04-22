@@ -1,18 +1,18 @@
 import { Route, Routes } from "react-router-dom";
+import DoctorLayout from "../components/Layout/DoctorSideBarLayout";
 import ChooseUser from "../pages/ChooseUser/ChooseUser";
 import DocterRegestered from "../pages/DocterRegestered/DocterRegestered";
 import DoctorProfile from "../pages/DoctorProfile/DoctorProfile";
-import DoctorDashboard from "../pages/DoctorRelated/DoctorDashboard/DoctorDashboard";
+import DoctorAppointment from "../pages/DoctorRelated/DoctorAppoinment/DoctorAppoinment";
+import DoctorHome from "../pages/DoctorRelated/DoctorHome/DoctorHome";
+import DoctorNotification from "../pages/DoctorRelated/DoctorNotification/DoctorNotification";
+import DoctorSidebarPatient from "../pages/DoctorSidebarPatient/DoctorSidebarPatient";
 import Home from "../pages/Home/Home";
 import Patientprofile from "../pages/PatientProfile/Patientprofile";
 import PatientRegistered from "../pages/PatientRegistered/PatientRegistered";
-import Signin from "../pages/Signin/Signin";
-import DoctorLayout from "../components/Layout/DoctorSideBarLayout";
-import DoctorHome from "../pages/DoctorRelated/DoctorHome/DoctorHome";
-import DoctorSidebarPatient from "../pages/DoctorSidebarPatient/DoctorSidebarPatient";
-import DoctorAppointment from "../pages/DoctorRelated/DoctorAppoinment/DoctorAppoinment";
-import DoctorNotification from "../pages/DoctorRelated/DoctorNotification/DoctorNotification";
 import DoctorsList from "../pages/PatientsRelated/DoctorsList/DoctorsList";
+import Signin from "../pages/Signin/Signin";
+import DoctorDetailPage from "../pages/DoctorDetail/DoctorDetailPage";
 const AppRouter = () => {
   return (
     <Routes>
@@ -23,7 +23,8 @@ const AppRouter = () => {
       <Route path="/register/patient" element={<PatientRegistered />} />{" "}
       <Route path="/login" element={<Signin />} />
       <Route path="/chooseUser" element={<ChooseUser />} />{" "}
-      <Route path="/doctorsList" element={<DoctorsList />} />
+      <Route path="/doctorsList" element={<DoctorsList />} />{" "}
+      <Route path="/doctorDetail/:id" element={<DoctorDetailPage />} />
       {/* <Route
         path="/doctor/dashboard"
         element={

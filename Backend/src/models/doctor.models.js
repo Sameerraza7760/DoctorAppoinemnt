@@ -9,7 +9,7 @@ const DocterSchema = new Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      index: true, // searching field enabled in DATABSE
+      index: true, // searching field enabled in DATABASE
     },
     email: {
       type: String,
@@ -18,7 +18,7 @@ const DocterSchema = new Schema(
       lowercase: true,
       trim: true,
     },
-
+    doctorImage: { type: String },
     gender: {
       type: String,
       required: true,
@@ -26,7 +26,7 @@ const DocterSchema = new Schema(
       trim: true,
     },
     phoneNumber: {
-      type: String,
+      type: Number,
       required: true,
       index: true,
       trim: true,
@@ -45,45 +45,50 @@ const DocterSchema = new Schema(
     },
     password: {
       type: String,
-      required: [true, "password is required"],
+      required: [true, "Password is required"],
     },
     refreshToken: {
       type: String,
     },
     experience: {
-      type: String,
-      required: [true, "experience is required"],
+      type: Number,
+      required: [true, "Experience is required"],
     },
     feesPerConsultation: {
-      type: String,
-      required: [true, "fee is required"],
+      type: Number,
+      required: [true, "Fee is required"],
     },
-
     qualifications: {
       type: String,
-      required: [true, "fee is required"],
+      required: [true, "Qualifications are required"],
     },
-    timings: {
-      type: String,
-      required: [true, "work timing is required"],
+    services: {
+      type: Array,
+      required: [true, "Qualifications are required"],
     },
+    startTiming: {
+      type: Date,
+    },
+    endTiming: {
+      type: Date,
+    },
+    startDay: { type: String },
+    endDay: { type: String },
   },
   { timestamps: true }
 );
-DocterSchema.pre("save", async function (next) {
-  if (!this.isModified("password")) return next(); // in this this line check that the password in the database is bycrypt or not if bycript so return else bycript the password
 
+DocterSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) return next();
   this.password = await bcrypt.hash(this.password, 10);
   next();
 });
 DocterSchema.methods.isPasswordCorrect = async function (password) {
   return await bcrypt.compare(password, this.password);
-}; //in this we cheak that password when the user is loggin the password is correct or not this is the method to cheak the password
-// export const User = mongoose.model("User", UserSchema);
+};
 DocterSchema.methods.generateAccessToken = async function () {
   return jwt.sign(
     {
-      // Token payload
       _id: this._id,
       email: this.email,
       username: this.username,

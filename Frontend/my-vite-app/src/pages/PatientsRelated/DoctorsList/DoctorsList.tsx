@@ -5,8 +5,8 @@ import useResourceFetch from "../../../hooks/useFetch";
 import { DoctorData } from "../../../types/type.Doctor";
 
 function DoctorsList() {
-  const [searchTerm, setSearchTerm] = useState(""); 
-  const [selectedDisease, setSelectedDisease] = useState(""); 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedDisease, setSelectedDisease] = useState("");
   const {
     data: doctors,
     isLoading,
@@ -18,7 +18,7 @@ function DoctorsList() {
   }
 
   if (error) {
-    return <div>Error: {error.message}</div>;
+    return <div>Error: {error.toString()}</div>;
   }
 
   const filteredDoctors = doctors.filter(
@@ -30,7 +30,7 @@ function DoctorsList() {
           .includes(selectedDisease.toLowerCase()))
   );
 
-  const diseases = Array.from(
+  const diseases: string[] = Array.from(
     new Set(
       doctors.map((doctor: DoctorData) => doctor.specialization.toLowerCase())
     )
@@ -46,7 +46,7 @@ function DoctorsList() {
           <p className="font-light text-gray-500 lg:mb-8 sm:text-xl dark:text-gray-400">
             Explore the features and functionalities of our Doctor Application.
           </p>
-         
+
           <input
             type="text"
             placeholder="Search by name..."
@@ -54,7 +54,6 @@ function DoctorsList() {
             value={searchTerm}
             onChange={(e) => setSearchTerm(e.target.value)}
           />
-       
           <select
             className="border border-gray-300 rounded-md px-4 py-2 mb-4 w-full"
             value={selectedDisease}
