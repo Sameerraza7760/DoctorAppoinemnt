@@ -25,11 +25,11 @@ const registerUser = asyncHandler(async (req, res) => {
   const { fullName, email, gender, phoneNumber, address, password } = req.body;
   let userObject = { fullName, email, gender, phoneNumber, address, password };
 
-  // Extend user object based on user type
   if (UserModel === Doctor) {
     const {
       specialization,
-      timings,
+      startTiming,
+      endTiming,
       experience,
       qualifications,
       feesPerConsultation,
@@ -37,26 +37,24 @@ const registerUser = asyncHandler(async (req, res) => {
     userObject = {
       ...userObject,
       specialization,
-      timings,
       experience,
       qualifications,
       feesPerConsultation,
+      startTiming,
+      endTiming,
     };
   } else if (UserModel === Patient) {
     const { maritalStatus } = req.body;
     userObject = { ...userObject, maritalStatus };
   }
 
-  // Check if user with the same email already exists
   const existedUser = await UserModel.findOne({ email });
   if (existedUser) {
     throw new ApiError(409, "User with email already exists");
   }
 
-  // Create new user
   const user = await UserModel.create(userObject);
 
-  // Respond with success message
   res.status(201).json({
     status: 201,
     data: user,
@@ -120,7 +118,6 @@ const loginUser = asyncHandler(async (req, res) => {
 
 const logoutUser = asyncHandler(async (req, res) => {
   const UserModel = getUserModel(req.userType);
-
   await UserModel.findByIdAndUpdate(
     req.user._id,
     {
@@ -137,7 +134,6 @@ const logoutUser = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: true,
   };
-
   return res
     .status(200)
     .clearCookie("accessToken", options)

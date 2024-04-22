@@ -1,7 +1,6 @@
-import { useEffect } from "react";
-import { UserType } from "../../types/type.Role";
-import { useUserContext } from "../../contexts/UserContexts/UserProvider";
 import { useNavigate } from "react-router-dom";
+import { useUserContext } from "../../contexts/UserContexts/UserProvider";
+import { UserType } from "../../types/type.Role";
 import "./style.css";
 function ChooseUser() {
   const { userType, setUserType } = useUserContext();
@@ -9,7 +8,7 @@ function ChooseUser() {
   const handleUserSelection = (user: UserType) => {
     setUserType(user);
   };
-  useEffect(() => {}, [userType]);
+
   return (
     <div className="bg-gray-100 min-h-screen">
       <div className="w-full bg-blue-600 h-[100px] p-6 text-center">

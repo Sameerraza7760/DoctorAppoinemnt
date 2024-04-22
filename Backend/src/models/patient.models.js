@@ -9,7 +9,7 @@ const PatientSchema = new Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      index: true, // searching field enabled in DATABSE
+      index: true,
     },
     email: {
       type: String,
@@ -26,7 +26,7 @@ const PatientSchema = new Schema(
       trim: true,
     },
     phoneNumber: {
-      type: String,
+      type: Number,
       required: true,
       index: true,
       trim: true,
