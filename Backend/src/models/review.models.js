@@ -1,4 +1,4 @@
-import mongoose, { Schema } from "mongoose";
+import mongoose from "mongoose";
 const reviewSchema = new mongoose.Schema({
   doctorId: {
     type: mongoose.Schema.Types.ObjectId,
@@ -12,7 +12,6 @@ const reviewSchema = new mongoose.Schema({
   date: {
     type: Date,
     required: true,
-    // default: Date.now,
   },
   reviewContent: {
     type: String,

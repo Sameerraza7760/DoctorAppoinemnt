@@ -1,34 +1,26 @@
-import { useState } from "react";
 import { TimePicker } from "antd";
+import { useState } from "react";
+import usePostData from "../../hooks/usePostData";
+import Loader from "../Loader/Loader";
 import { additionalDoctorDetails } from "./../../types/type.Doctor";
-import { useUserContext } from "../../contexts/UserContexts/UserProvider";
+import useResourceFetch from "../../hooks/useFetch";
 
-import axios from "axios";
-
-const specialtiesList = [
-  "Primary Care",
-  "Internal Medicine",
-  "Cardiology",
-  "Dermatology",
-  "Orthopedics",
-];
-
-const daysOfWeek = [
-  { value: "Monday", label: "Monday" },
-  { value: "Tuesday", label: "Tuesday" },
-  { value: "Wednesday", label: "Wednesday" },
-  { value: "Thursday", label: "Thursday" },
-  { value: "Friday", label: "Friday" },
-  { value: "Saturday", label: "Saturday" },
-  { value: "Sunday", label: "Sunday" },
-];
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
 function Modal({ isOpen, onClose }: ModalProps) {
-  const { userType } = useUserContext();
+  const { postData, isLoading } = usePostData();
+  const { data: metadata } = useResourceFetch("/api/v1/metadata");
+
+  // if (metadata === undefined || isLoading) {
+  //   return <div>No metadata available.</div>;
+  // }
+
+  // const { daysOfWeek, specialties } = metadata;
+  // console.log(metadata);
+
   const [selectedServices, setselectedServices] = useState<string[]>([]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [doctorDetails, setDoctorDetails] = useState<additionalDoctorDetails>({
@@ -75,33 +67,18 @@ function Modal({ isOpen, onClose }: ModalProps) {
   };
   const saveDoctorDetails = async (e: React.FormEvent) => {
     e.preventDefault();
-    console.log("Saving doctor details:", doctorDetails);
-    const token = localStorage.getItem("accessToken");
-    try {
-      const response = await axios.post(
-        "http://localhost:8000/api/v1/doctors/addAdditionalDetail",
-        doctorDetails,
-        {
-          headers: {
-            "Content-Type": "multipart/form-data",
-            Authorization: `Bearer ${token}`,
-            "User-Type": userType,
-          },
-        }
-      );
-      console.log("Success:", response.data);
-      // setDoctorDetails({
-      //   experience: "",
-      //   education: "",
-      //   services: [],
-      //   startTiming: 0,
-      //   endTiming: 0,
-      //   image: null,
-      // });
-      // onClose();
-    } catch (error) {
-      console.error("Error:", error);
-    }
+    const url = "/api/v1/doctors/addAdditionalDetail";
+    await postData(url, doctorDetails);
+
+    setDoctorDetails({
+      experience: "",
+      education: "",
+      services: [],
+      startTiming: 0,
+      endTiming: 0,
+      image: null,
+    });
+    onClose();
   };
   return (
     <div>
@@ -189,11 +166,13 @@ function Modal({ isOpen, onClose }: ModalProps) {
                     <option value="" disabled>
                       Select Services
                     </option>
-                    {specialtiesList.map((services) => (
-                      <option key={services} value={services}>
-                        {services}
-                      </option>
-                    ))}
+                    {metadata.specialties.length > 0
+                      ? metadata.specialties.map((service: string) => (
+                          <option key={service} value={service}>
+                            {service}
+                          </option>
+                        ))
+                      : null}
                   </select>
                 </div>
                 <div>
@@ -201,7 +180,7 @@ function Modal({ isOpen, onClose }: ModalProps) {
                     Selected Specialties
                   </label>
                   <div className="mt-1 flex flex-wrap">
-                    {selectedServices.map((services) => (
+                    {selectedServices?.map((services) => (
                       <div
                         key={services}
                         className="bg-gray-100 text-gray-800 rounded-full px-3 py-1 m-1 flex items-center"
@@ -270,11 +249,12 @@ function Modal({ isOpen, onClose }: ModalProps) {
                     onChange={handleInputChange}
                     className="mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md px-3 py-2"
                   >
-                    {daysOfWeek.map((day) => (
-                      <option key={day.value} value={day.value}>
-                        {day.label}
-                      </option>
-                    ))}
+                    {metadata.daysOfWeek &&
+                      metadata.daysOfWeek.map((day) => (
+                        <option key={day.value} value={day.value}>
+                          {day.label}
+                        </option>
+                      ))}
                   </select>
                 </div>
                 <div>
@@ -291,7 +271,7 @@ function Modal({ isOpen, onClose }: ModalProps) {
                     onChange={handleInputChange}
                     className="mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md px-3 py-2"
                   >
-                    {daysOfWeek.map((day) => (
+                    {metadata.daysOfWeek?.map((day) => (
                       <option key={day.value} value={day.value}>
                         {day.label}
                       </option>

@@ -1,10 +1,11 @@
-type AppointmentRequest = {
+export interface AppointmentRequest {
   doctorId: string;
-  name: string;
+  fullName: string;
   email: string;
-  phone: number;
+  phoneNumber: number;
   message?: string;
   patientId: string;
-  appointmentDate: Date;
+  appointmentDate: string;
   appointmentTime: string;
-};
+  _id?: string;
+}

@@ -1,11 +1,15 @@
 import { Router } from "express";
+import {
+    addReview,
+    getReviews
+} from "../controllers/patient.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
-import { addReview, getReviews } from "../controllers/patient.controller.js";
 
 const router = Router();
 
 router.route("/addReview").post(verifyJWT, addReview);
-router.route("/getReviews").get(getReviews);
+router.route("/getReviews/:doctorId").get(getReviews);
+
 // router
 //   .route("/addAdditionalDetail")
 //   .post(upload.single("doctorImage"), verifyJWT, addAdditionalDetail);

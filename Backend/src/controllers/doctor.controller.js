@@ -10,7 +10,7 @@ const getDoctors = asyncHandler(async (req, res) => {
   res.status(200).json(doctors);
 });
 
-const addAdditionalDetail = async (req, res) => {
+const addAdditionalDetail = asyncHandler(async (req, res) => {
   const { startTiming, endTiming, education, services, startDay, endDay } =
     req.body;
 
@@ -37,8 +37,8 @@ const addAdditionalDetail = async (req, res) => {
     throw new ApiError(404, "Doctor not found");
   }
   res.json(doctor);
-};
-const getDoctorDetails = async (req, res) => {
+});
+const getDoctorDetails = asyncHandler(async (req, res) => {
   try {
     const { doctorId } = req.params;
 
@@ -53,5 +53,5 @@ const getDoctorDetails = async (req, res) => {
     console.error("Error fetching doctor details:", error);
     res.status(500).json({ message: "Server error" });
   }
-};
+});
 export { getDoctors, addAdditionalDetail, getDoctorDetails };

@@ -3,14 +3,41 @@ import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../../contexts/UserContexts/UserProvider";
 import useToggle from "../../hooks/useToggle";
+import useLogout from "../../hooks/useLogout";
+
 import "./style.css";
 function Header() {
-  const { isOpen, toggle } = useToggle();
+  const { isOpen, toggle, close } = useToggle();
+  const { logout } = useLogout();
   const { userType } = useUserContext();
-  const currentUser = useSelector((state: any) => state.user);
-  console.log("v", currentUser);
+  const { isLoggedIn } = useSelector((state: any) => state.user);
   const navigate = useNavigate();
 
+  const handleNavigation = (route: string) => {
+    navigate(route);
+    close();
+  };
+  function renderButton() {
+    if (isLoggedIn) {
+      return (
+        <button
+          onClick={logout}
+          className="inline-flex ml-5 text-gray-400 border border-gray-700 px-6 outline-4 focus:outline-none rounded"
+        >
+          Logout
+        </button>
+      );
+    } else {
+      return (
+        <button
+          onClick={() => navigate("/chooseUser")}
+          className="inline-flex ml-5 text-gray-400 border border-gray-700 px-6 outline-4 focus:outline-none rounded"
+        >
+          Login
+        </button>
+      );
+    }
+  }
 
   return (
     <header className="text-gray-600 body-font border-b border-gray-300">
@@ -31,7 +58,7 @@ function Header() {
         >
           <a
             className="mr-5 hover:text-gray-900 font-bold cursor-pointer"
-            onClick={() => navigate("/doctorsList")}
+            onClick={() => handleNavigation("/doctorsList")}
           >
             Find Doctors
           </a>
@@ -61,13 +88,7 @@ function Header() {
                 Help
               </a>
             </li>{" "}
-            <button
-              // onClick={logout}
-              onClick={() => navigate("/chooseUser")}
-              className="inline-flex ml-5 text-gray-400 border border-gray-700 px-6 outline-4 focus:outline-none rounded"
-            >
-              Login
-            </button>{" "}
+            {renderButton()}
           </ul>{" "}
           <div className="loginHamBurger px-4 py-2">
             <button
@@ -99,15 +120,7 @@ function Header() {
                       Help
                     </a>
                   </li>
-                  <li className="px-4 py-2">
-                    <button
-                      // onClick={logout}
-                      onClick={() => navigate("/chooseUser")}
-                      className="text-gray-400 border border-gray-700 px-6 outline-4 focus:outline-none rounded"
-                    >
-                      Login
-                    </button>
-                  </li>
+                  <li className="px-4 py-2">{renderButton()}</li>
                 </ul>
               </div>
             )}

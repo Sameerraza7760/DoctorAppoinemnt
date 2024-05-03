@@ -5,12 +5,9 @@ import useRegistration from "../../hooks/useRegistration";
 import "./style.css";
 function PatientRegistered() {
   const navigate = useNavigate();
-  const {
-    onSubmit,
-    isSubmitting,
-    register,
-    handleSubmit,
-  } = useRegistration("http://localhost:8000/api/v1/users/register");
+  const { onSubmit, isSubmitting, register, handleSubmit } = useRegistration(
+    "/api/v1/users/register"
+  );
 
   return (
     <div className="min-h-screen flex w-full">
@@ -93,7 +90,7 @@ function PatientRegistered() {
           </div>
           <div className="grid md:grid-cols-2 md:gap-6">
             <div className="relative z-0 w-full mb-5 group">
-            <input
+              <input
                 type="number"
                 {...register("phoneNumber", { valueAsNumber: true })}
                 id="floating_phone"

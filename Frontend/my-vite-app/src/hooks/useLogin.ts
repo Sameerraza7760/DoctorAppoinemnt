@@ -31,10 +31,16 @@ const useLogin = (url: string, Schema: SchemaType) => {
       });
 
       setTimeout(() => {
-        navigate(`/${userType}/home`);
+        if (userType === "patient") {
+          navigate("/");
+          return;
+        }
+        navigate("/doctor/home");
       }, 2000);
 
-      dispatch(setCurrentUser(response.data.data));
+      const user = response?.data?.data?.user;
+      dispatch(setCurrentUser(user));
+
       localStorage.setItem("accessToken", response.data.data.accessToken);
       addToast("Login successful", {
         appearance: "success",
