@@ -1,6 +1,8 @@
 import { Review } from "../models/review.models.js";
 import { asyncHandler } from "../utills/asyncHandler.js";
-
+import { ApiError } from "../utills/ApiError.js";
+import { io } from "../index.js";
+import mongoose from "mongoose";
 const addReview = asyncHandler(async (req, res) => {
   const { doctorId, author, reviewContent, date } = req.body;
   try {
@@ -11,6 +13,8 @@ const addReview = asyncHandler(async (req, res) => {
       date,
     });
     const savedReview = await newReview.save();
+    io.emit("reviewsFetched", { savedReview });
+
     res
       .status(201)
       .json({ message: "Review added successfully", review: savedReview });
@@ -20,8 +24,12 @@ const addReview = asyncHandler(async (req, res) => {
   }
 });
 const getReviews = asyncHandler(async (req, res) => {
+  const { doctorId } = req.params;
   try {
     const reviews = await Review.aggregate([
+      {
+        $match: { doctorId: new mongoose.Types.ObjectId(doctorId) },
+      },
       {
         $lookup: {
           from: "doctors",
@@ -46,14 +54,16 @@ const getReviews = asyncHandler(async (req, res) => {
     ]);
 
     if (!reviews || reviews.length === 0) {
-      return res.status(404).json({ error: "No reviews found" });
+      throw new ApiError(404, "reviews not Found");
     }
 
     res.status(200).json({ reviews });
   } catch (error) {
-    console.error("Error fetching reviews:", error);
+    console.error("Error fetching reviews:", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
 });
 
-export { addReview, getReviews };
+
+
+export { addReview, getReviews, };

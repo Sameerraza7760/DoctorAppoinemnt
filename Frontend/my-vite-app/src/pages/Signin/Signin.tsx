@@ -5,7 +5,7 @@ import { LoginFormSchema } from "../../zodSchema/loginSchema";
 import "./style.css";
 function Signin() {
   const { onSubmit, isSubmitting, register, handleSubmit } = useLogin(
-    "http://localhost:8000/api/v1/users/login",
+    "/api/v1/users/login",
     LoginFormSchema
   );
   return (

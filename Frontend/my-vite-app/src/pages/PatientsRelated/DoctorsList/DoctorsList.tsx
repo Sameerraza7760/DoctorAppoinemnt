@@ -11,7 +11,7 @@ function DoctorsList() {
     data: doctors,
     isLoading,
     error,
-  } = useResourceFetch("http://localhost:8000/api/v1/doctors");
+  } = useResourceFetch("/api/v1/doctors");
 
   if (isLoading) {
     return <Loader />;
@@ -21,7 +21,7 @@ function DoctorsList() {
     return <div>Error: {error.toString()}</div>;
   }
 
-  const filteredDoctors = doctors.filter(
+  const filteredDoctors = doctors?.filter(
     (doctor: DoctorData) =>
       doctor.fullName.toLowerCase().includes(searchTerm.toLowerCase()) &&
       (selectedDisease === "" ||
@@ -32,7 +32,7 @@ function DoctorsList() {
 
   const diseases: string[] = Array.from(
     new Set(
-      doctors.map((doctor: DoctorData) => doctor.specialization.toLowerCase())
+      doctors?.map((doctor: DoctorData) => doctor.specialization.toLowerCase())
     )
   );
 
@@ -60,7 +60,7 @@ function DoctorsList() {
             onChange={(e) => setSelectedDisease(e.target.value)}
           >
             <option value="">All Diseases</option>
-            {diseases.map((disease) => (
+            {diseases?.map((disease) => (
               <option key={disease} value={disease}>
                 {disease}
               </option>

@@ -6,8 +6,9 @@ import useRegistration from "../../hooks/useRegistration";
 import "./style.css";
 function DocterRegestered() {
   const navigate = useNavigate();
-  const { onSubmit, isSubmitting, register, handleSubmit, errors, control } =
-    useRegistration("http://localhost:8000/api/v1/users/register");
+  const { onSubmit, isSubmitting, register, handleSubmit } = useRegistration(
+    "/api/v1/users/register"
+  );
 
   return (
     <div className="min-h-screen flex w-full">

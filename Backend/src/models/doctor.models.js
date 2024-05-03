@@ -9,7 +9,7 @@ const DocterSchema = new Schema(
       unique: true,
       lowercase: true,
       trim: true,
-      index: true, // searching field enabled in DATABASE
+      index: true,
     },
     email: {
       type: String,

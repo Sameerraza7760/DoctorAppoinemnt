@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { ProfileOutlined, UserOutlined } from "@ant-design/icons"; // Import icons from Ant Design
+import { ProfileOutlined, UserOutlined } from "@ant-design/icons";
 import { DoctorData } from "../../types/type.Doctor";
 
 interface CardProps {

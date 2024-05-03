@@ -2,31 +2,38 @@ import mongoose from "mongoose";
 
 const appointmentSchema = new mongoose.Schema(
   {
-    name: {
+    fullName: {
       type: String,
       required: true,
     },
     email: {
       type: String,
       required: true,
-      unique: true,
+
       lowercase: true,
       trim: true,
     },
-    phone: {
-      type: String,
-      required: true,
-      unique: true,
-    },
+
     message: {
       type: String,
     },
+    phoneNumber: {
+      type: Number,
+      required: true,
+
+      trim: true,
+    },
     appointmentDate: {
-      type: Date,
+      type: String,
       required: true,
     },
     appointmentTime: {
       type: String,
+      required: true,
+    },
+    doctorId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Doctor",
       required: true,
     },
   },

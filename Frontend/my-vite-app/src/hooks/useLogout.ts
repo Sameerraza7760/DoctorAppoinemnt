@@ -2,7 +2,10 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 import { useUserContext } from "../contexts/UserContexts/UserProvider";
 import { useToasts } from "react-toast-notifications";
+import { useDispatch } from "react-redux";
+import { removeCurrentUser } from "../store/auth/authSlice";
 const useLogout = () => {
+  const dispatch = useDispatch();
   const { userType } = useUserContext();
   const navigate = useNavigate();
   const { addToast } = useToasts();
@@ -10,7 +13,7 @@ const useLogout = () => {
     try {
       const accsessToken = localStorage.getItem("accessToken");
       const response = await axios.post(
-        "http://localhost:8000/api/v1/users/logout",
+        "http://localhost:8001/api/v1/users/logout",
         {},
         {
           headers: {
@@ -19,12 +22,12 @@ const useLogout = () => {
           },
         }
       );
-      console.log(response.data);
       addToast("Logout successful", {
         appearance: "success",
         autoDismiss: true,
         autoDismissTimeout: 3000,
       });
+      dispatch(removeCurrentUser());
       setTimeout(() => {
         navigate("/");
       }, 3000);

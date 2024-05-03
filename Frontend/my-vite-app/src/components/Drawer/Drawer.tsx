@@ -1,11 +1,19 @@
-import { MailOutlined, PhoneOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  MailOutlined,
+  PhoneOutlined,
+  TrophyFilled,
+  UserOutlined,
+} from "@ant-design/icons";
 import { Button, DatePicker, Drawer, Form, Input, TimePicker } from "antd";
+import usePostData from "../../hooks/usePostData";
+import { AppointmentRequest } from "../../types/type.AppoinmentRequest";
 import { DoctorData, additionalDoctorDetails } from "../../types/type.Doctor";
-import { formatTime } from "../../utills/formatTime";
-import { useEffect } from "react";
+import { formatDate, formatTime } from "../../utills/formatTime";
+import { useToasts } from "react-toast-notifications";
 export interface ExtendedDoctorData
   extends DoctorData,
     additionalDoctorDetails {}
+
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
@@ -13,17 +21,45 @@ interface ModalProps {
 }
 
 function AppointmentDrawer({ isOpen, onClose, doctorDetail }: ModalProps) {
+  const { addToast } = useToasts();
+  const { postData } = usePostData();
   const [form] = Form.useForm();
-  const { doctorImage, startTiming, endTiming, fullName, startDay, endDay } =
-    doctorDetail;
-  const onFinish = (values: any) => {
-    console.log("Received values:", values);
-    onClose();
-  };
-  useEffect(() => {
-    form.resetFields();
-  }, [isOpen]);
 
+  const {
+    doctorImage,
+    startTiming,
+    endTiming,
+    fullName,
+    startDay,
+    endDay,
+    _id,
+  } = doctorDetail;
+
+  const onFinish = async (data: AppointmentRequest) => {
+    const { appointmentDate, appointmentTime, ...otherValues } = data;
+    const formattedDate = formatDate(appointmentDate);
+    const formattedTime = formatTime(appointmentTime);
+    const formData: AppointmentRequest = {
+      ...otherValues,
+      appointmentDate: formattedDate,
+      appointmentTime: formattedTime,
+      doctorId: _id,
+    };
+    console.log(formData);
+
+    try {
+      await postData("/api/v1/appoinment/createAppointment", formData);
+      addToast("Appointment Request Sent", {
+        appearance: "success",
+        autoDismiss: true,
+        autoDismissTimeout: 3000,
+      });
+      form.resetFields();
+      onClose();
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <Drawer
       title="Appointment Request"
@@ -48,7 +84,7 @@ function AppointmentDrawer({ isOpen, onClose, doctorDetail }: ModalProps) {
       </div>
       <Form form={form} layout="vertical" onFinish={onFinish}>
         <Form.Item
-          name="name"
+          name="fullName"
           label="Your Name"
           rules={[{ required: true, message: "Please enter your name" }]}
         >
@@ -65,12 +101,11 @@ function AppointmentDrawer({ isOpen, onClose, doctorDetail }: ModalProps) {
           <Input prefix={<MailOutlined />} placeholder="Enter your email" />
         </Form.Item>
         <Form.Item
-          name="phone"
+          name="phoneNumber"
           label="Your Phone Number"
           rules={[
             { required: true, message: "Please enter your phone number" },
             {
-              pattern: /^(\+\d{1,3}[- ]?)?\d{10}$/,
               message: "Please enter a valid phone number",
             },
           ]}
@@ -87,7 +122,10 @@ function AppointmentDrawer({ isOpen, onClose, doctorDetail }: ModalProps) {
             { required: true, message: "Please select appointment date" },
           ]}
         >
-          <DatePicker style={{ width: "100%" }} />
+          <DatePicker
+            style={{ width: "100%" }}
+            onChange={(value) => (value ? formatDate(value.valueOf()) : null)}
+          />
         </Form.Item>
         <Form.Item
           name="appointmentTime"
@@ -96,7 +134,10 @@ function AppointmentDrawer({ isOpen, onClose, doctorDetail }: ModalProps) {
             { required: true, message: "Please select appointment time" },
           ]}
         >
-          <TimePicker style={{ width: "100%" }} />
+          <TimePicker
+            style={{ width: "100%" }}
+            onChange={(value) => (value ? formatTime(value.valueOf()) : null)}
+          />
         </Form.Item>
         <Form.Item name="message" label="Additional Message">
           <Input.TextArea rows={4} placeholder="Enter any additional message" />

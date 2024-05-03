@@ -20,21 +20,19 @@ const queryClient = new QueryClient({
 const root = createRoot(document.getElementById("root")!);
 
 root.render(
-  <React.StrictMode>
-    <ErrorBoundary>
-      <Router>
-        <Provider store={store}>
-          <PersistGate loading={null} persistor={persistor}>
-            <ToastProvider>
-              <UserContextProvider>
-                <QueryClientProvider client={queryClient}>
-                  <App />
-                </QueryClientProvider>
-              </UserContextProvider>
-            </ToastProvider>
-          </PersistGate>
-        </Provider>
-      </Router>
-    </ErrorBoundary>
-  </React.StrictMode>
+  <ErrorBoundary>
+    <Router>
+      <Provider store={store}>
+        <PersistGate loading={null} persistor={persistor}>
+          <ToastProvider>
+            <UserContextProvider>
+              <QueryClientProvider client={queryClient}>
+                <App />
+              </QueryClientProvider>
+            </UserContextProvider>
+          </ToastProvider>
+        </PersistGate>
+      </Provider>
+    </Router>
+  </ErrorBoundary>
 );
