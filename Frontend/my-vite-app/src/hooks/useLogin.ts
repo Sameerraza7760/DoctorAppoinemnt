@@ -7,19 +7,20 @@ import { useToasts } from "react-toast-notifications";
 import { z } from "zod";
 import { useUserContext } from "../contexts/UserContexts/UserProvider";
 import { setCurrentUser } from "../store/auth/authSlice";
+
 type SchemaType = z.ZodObject<any>;
+
 const useLogin = (url: string, Schema: SchemaType) => {
   const dispatch = useDispatch();
-  const { addToast } = useToasts();
   const navigate = useNavigate();
   const { userType } = useUserContext();
+  const { addToast } = useToasts();
+
   const {
     register,
     handleSubmit,
     formState: { isSubmitting },
-  } = useForm({
-    resolver: zodResolver(Schema),
-  });
+  } = useForm({ resolver: zodResolver(Schema) });
 
   const onSubmit = async (data: any) => {
     try {
@@ -47,15 +48,19 @@ const useLogin = (url: string, Schema: SchemaType) => {
         autoDismiss: true,
         autoDismissTimeout: 3000,
       });
-    } catch (error: any) {
-      addToast(error.message, {
-        appearance: "error",
-        autoDismiss: true,
-        autoDismissTimeout: 3000,
-      });
-      console.error("Error registering:", error.message);
+    } catch (error) {
+      if (error instanceof Error) {
+        addToast(error.message, {
+          appearance: "error",
+          autoDismiss: true,
+          autoDismissTimeout: 3000,
+        });
+      } else {
+        console.error("Error registering:", error.message);
+      }
     }
   };
+
   return {
     onSubmit,
     isSubmitting,

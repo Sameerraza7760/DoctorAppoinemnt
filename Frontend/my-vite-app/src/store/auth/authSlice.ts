@@ -2,7 +2,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { DoctorData } from "./../../types/type.Doctor";
 import { PatientData } from "./../../types/type.Patient";
 
-interface UserState {
+export interface UserState {
   currentUser: DoctorData | PatientData | null;
   isLoggedIn: boolean;
 }

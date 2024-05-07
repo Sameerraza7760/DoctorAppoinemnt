@@ -14,19 +14,20 @@ const DoctorLayout = ({ children }: ChilderInterface) => {
   };
 
   return (
-    <div className="flex">
+    <div className="flex h-screen">
       <div
         className={`transition-all duration-300 ${
           isSidebarOpen ? "w-2/5" : "w-0"
         } overflow-hidden md:w-[250px]`}
+        style={{ flex: "none" }} // Ensure the sidebar doesn't grow or shrink
       >
         <DoctorSidebar />
       </div>
-      <div className="flex flex-col flex-1 min-h-screen">
+      <div className="flex flex-col flex-1 min-h-screen overflow-y-auto">
         <div className="px-4 py-2">
           <button
             onClick={toggleSidebar}
-            className="md:hidden px-3  py-2 text-black rounded-md"
+            className="md:hidden px-3 py-2 text-black rounded-md"
           >
             <MenuOutlined />
           </button>

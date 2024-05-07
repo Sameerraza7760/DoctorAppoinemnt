@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
-import io from "socket.io-client";
 import useResourceFetch from "../../hooks/useFetch";
 import usePostData from "../../hooks/usePostData";
+import socket from "../../services/socketService";
+import Button from "../Button/Button";
 import { Review } from "./../../types/type.review";
 interface reviewSectionProps {
   doctorId: string;
@@ -10,8 +11,7 @@ interface reviewSectionProps {
 
 const ReviewSection = ({ doctorId }: reviewSectionProps) => {
   const { data } = useResourceFetch(`/api/v1/patients/getReviews/${doctorId}`);
-
-  const { postData } = usePostData();
+  const { postData, isLoading } = usePostData();
   const { currentUser } = useSelector((state: any) => state?.user);
   const [reviewsData, setReviews] = useState<Review[]>([]);
   const [formData, setFormData] = useState<Review>({
@@ -20,8 +20,6 @@ const ReviewSection = ({ doctorId }: reviewSectionProps) => {
     doctorId: "",
     date: "",
   });
-
-  // if (isLoading) return <Loader />;
 
   const currentDate = new Date().toLocaleDateString("en-US", {
     year: "numeric",
@@ -40,11 +38,12 @@ const ReviewSection = ({ doctorId }: reviewSectionProps) => {
     });
   };
 
-  const handleAddRewiew = async () => {
+  const handleAddReview = async (e: any) => {
+    e.preventDefault();
     if (!formData.reviewContent) return;
     const url = "/api/v1/patients/addReview";
     await postData(url, formData);
-
+    socket.emit("reviewAdded", formData);
     setFormData({
       reviewContent: "",
       author: "",
@@ -52,13 +51,24 @@ const ReviewSection = ({ doctorId }: reviewSectionProps) => {
       date: "",
     });
   };
-
   useEffect(() => {
-    const socket = io("http://localhost:8001");
-    socket.on("reviewsFetched", ({ savedReview }) => {
-      setReviews((prevReviews) => [...prevReviews, savedReview]);
-      console.log("saved,", savedReview);
+    socket.on("connect", () => {
+      console.log("Connected to WebSocket server");
     });
+    socket.on("reviewsFetched", ({ savedReview }) => {
+      if (savedReview.doctorId === doctorId) {
+        setReviews((prevReviews) => [...prevReviews, savedReview]);
+        console.log("New review received:", savedReview);
+      }
+    });
+
+    socket.on("disconnect", () => {
+      console.log("Disconnected from WebSocket server");
+    });
+
+    return () => {
+      socket.disconnect();
+    };
   }, []);
 
   useEffect(() => {
@@ -74,7 +84,6 @@ const ReviewSection = ({ doctorId }: reviewSectionProps) => {
           <p className="text-gray-800">{`"${review.reviewContent}"`}</p>
           <p className="text-gray-600">{`- ${review.author}`}</p>
           <p className="text-gray-500">{`Date: ${review.date}`}</p>{" "}
-          {/* Display the date */}
         </div>
       ));
     } else {
@@ -92,20 +101,21 @@ const ReviewSection = ({ doctorId }: reviewSectionProps) => {
         <h2 className="text-xl font-semibold mb-4 text-gray-800">
           Leave a Comment
         </h2>
-        <textarea
-          value={formData.reviewContent}
-          onChange={handleReviewChange}
-          placeholder="Enter your comment"
-          className="w-full border rounded-md p-2"
-          required
-          rows={4}
-        ></textarea>
-        <button
-          onClick={handleAddRewiew}
-          className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-300 ease-in-out"
-        >
-          Submit Comment
-        </button>
+        <form onSubmit={handleAddReview}>
+          <textarea
+            value={formData.reviewContent}
+            onChange={handleReviewChange}
+            placeholder="Enter your comment"
+            className="w-full border rounded-md p-2"
+            required
+            rows={4}
+          ></textarea>
+          <Button
+            label="Add Review"
+            isSubmitting={isLoading}
+            styling="mt-4 px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-300 ease-in-out"
+          />
+        </form>
       </div>
     </>
   );

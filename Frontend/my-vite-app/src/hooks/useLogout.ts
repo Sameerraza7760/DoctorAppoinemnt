@@ -11,13 +11,13 @@ const useLogout = () => {
   const { addToast } = useToasts();
   const logout = async () => {
     try {
-      const accsessToken = localStorage.getItem("accessToken");
-      const response = await axios.post(
-        "http://localhost:8001/api/v1/users/logout",
+      const accessToken = localStorage.getItem("accessToken");
+      await axios.post(
+        "/api/v1/users/logout",
         {},
         {
           headers: {
-            Authorization: `Bearer ${accsessToken}`,
+            Authorization: `Bearer ${accessToken}`,
             "User-Type": userType,
           },
         }
@@ -28,9 +28,7 @@ const useLogout = () => {
         autoDismissTimeout: 3000,
       });
       dispatch(removeCurrentUser());
-      setTimeout(() => {
-        navigate("/");
-      }, 3000);
+      navigate("/");
       localStorage.removeItem("accessToken");
     } catch (error: any) {
       addToast(error.message, {

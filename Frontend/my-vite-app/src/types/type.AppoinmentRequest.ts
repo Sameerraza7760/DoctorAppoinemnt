@@ -3,9 +3,10 @@ export interface AppointmentRequest {
   fullName: string;
   email: string;
   phoneNumber: number;
-  message?: string;
+  address?: string;
   patientId: string;
   appointmentDate: string;
   appointmentTime: string;
-  _id?: string;
+  _id?: string | undefined;
+  status: string;
 }

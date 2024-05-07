@@ -14,7 +14,7 @@ const appointmentSchema = new mongoose.Schema(
       trim: true,
     },
 
-    message: {
+    address: {
       type: String,
     },
     phoneNumber: {
@@ -33,9 +33,15 @@ const appointmentSchema = new mongoose.Schema(
     },
     doctorId: {
       type: mongoose.Schema.Types.ObjectId,
-      ref: "Doctor",
+      ref: "doctor",
       required: true,
     },
+    patientId: {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "patient",
+      required: true,
+    },
+    status: { type: String, required: true },
   },
   { timestamps: true }
 );

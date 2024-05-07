@@ -1,7 +1,7 @@
 import { Review } from "../models/review.models.js";
 import { asyncHandler } from "../utills/asyncHandler.js";
 import { ApiError } from "../utills/ApiError.js";
-import { io } from "../index.js";
+// import { io } from "../index.js";
 import mongoose from "mongoose";
 const addReview = asyncHandler(async (req, res) => {
   const { doctorId, author, reviewContent, date } = req.body;
@@ -13,7 +13,7 @@ const addReview = asyncHandler(async (req, res) => {
       date,
     });
     const savedReview = await newReview.save();
-    io.emit("reviewsFetched", { savedReview });
+    // io.emit("reviewsFetched", { savedReview });
 
     res
       .status(201)
@@ -64,6 +64,4 @@ const getReviews = asyncHandler(async (req, res) => {
   }
 });
 
-
-
-export { addReview, getReviews, };
+export { addReview, getReviews };
