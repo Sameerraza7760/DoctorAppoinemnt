@@ -3,9 +3,8 @@ import Loader from "../../components/Loader/Loader";
 import ReviewSection from "../../components/ReviewSection/ReviewSection";
 import useResourceFetch from "../../hooks/useFetch";
 import useToggle from "../../hooks/useToggle";
-import { DoctorData } from "../../types/type.Doctor";
+import { DoctorData, additionalDoctorDetails } from "../../types/type.Doctor";
 import AppointmentDrawer from "./../../components/Drawer/Drawer";
-import { additionalDoctorDetails } from "../../types/type.Doctor";
 export interface ExtendedDoctorData
   extends DoctorData,
     additionalDoctorDetails {}
@@ -37,19 +36,23 @@ const DoctorDetailPage = () => {
   return (
     <div className="bg-gray-100 min-h-screen">
       <header className="bg-blue-500 shadow-md py-4">
-        <div className="container mx-auto flex items-center justify-between px-4">
+        <div className="container mx-auto flex items-center justify-between px-4 ">
           <h1 className="text-3xl font-semibold text-white">
             Dr.{doctor.fullName}
           </h1>
           <img
-            src={doctor.doctorImage}
+            src={
+              typeof doctor.doctorImage === "string"
+                ? doctor.doctorImage
+                : undefined
+            }
             alt="Doctor's Profile Picture"
             className="w-16 h-16 rounded-full"
           />
         </div>
       </header>
-      <main className="container mx-auto py-8">
-        <section className="bg-white shadow-md rounded-md p-6 mb-8">
+      <main className="container w-[97%] mx-auto py-8">
+        <section className="container bg-white shadow-md rounded-md p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4 text-gray-800">
             {doctor.email}
           </h2>

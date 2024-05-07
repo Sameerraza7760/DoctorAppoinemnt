@@ -12,6 +12,8 @@ const createAppointment = asyncHandler(async (req, res) => {
     appointmentDate,
     appointmentTime,
     phoneNumber,
+    status,
+    patientId
   } = req.body;
   try {
     const newAppoinment = new Appointment({
@@ -22,13 +24,24 @@ const createAppointment = asyncHandler(async (req, res) => {
       appointmentDate,
       appointmentTime,
       phoneNumber,
+      status,
+      patientId
     });
     const savedAppointment = await newAppoinment.save();
-    // io.emit("reviewsAppointment", { savedAppointment });
-    res.status(201).json({
-      message: "Appointment added successfully",
-      appointment: savedAppointment,
-    });
+
+    if (!savedAppointment) {
+      throw new ApiError(500, "Error creating appointment");
+    }
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponce(
+          200,
+          savedAppointment,
+          "appointment create successfully"
+        )
+      );
   } catch (error) {
     console.error("Error adding appointment:", error);
     res.status(500).json({ error: "Internal server error" });
@@ -58,7 +71,7 @@ const getAppointment = asyncHandler(async (req, res) => {
           doctorId: 1,
           fullName: 1,
           email: 1,
-          message: 1,
+          address: 1,
           appointmentDate: 1,
           appointmentTime: 1,
         },
@@ -66,18 +79,41 @@ const getAppointment = asyncHandler(async (req, res) => {
     ]);
 
     if (!appointments || appointments.length === 0) {
-      throw new ApiError(404, "Appointments not found");
+      throw new ApiError(404, "appointments not found");
     }
 
     return res
       .status(200)
       .json(
-        new ApiResponce(200, appointments, "User channel fetched successfully")
+        new ApiResponce(200, appointments, "appointments fetched successfully")
       );
   } catch (error) {
     console.error("Error fetching appointments:", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
 });
+const acceptAppointment = asyncHandler(async (req, res) => {
+  const { doctorId } = req.params;
+  const { status } = req.body;
 
-export { createAppointment, getAppointment };
+  try {
+    const appointment = await Appointment.findByIdAndUpdate(
+      doctorId,
+      { status },
+      { new: true }
+    );
+
+    if (!appointment) {
+      return res.status(404).json({ error: "Appointment not found" });
+    }
+
+    res
+      .status(200)
+      .json({ message: "Appointment status updated", appointment });
+  } catch (error) {
+    console.error("Error updating appointment status:", error);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+export { createAppointment, getAppointment, acceptAppointment };

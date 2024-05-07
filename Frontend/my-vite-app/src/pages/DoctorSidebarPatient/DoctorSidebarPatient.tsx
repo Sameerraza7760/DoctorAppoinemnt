@@ -11,7 +11,7 @@ function DoctorSidebarPatient() {
       id: 1,
       name: "John Doe",
       age: 35,
-      gender: "Male",
+      gender: "Male", 
       imageUrl: "https://randomuser.me/api/portraits/men/1.jpg",
     },
     {
@@ -35,7 +35,7 @@ function DoctorSidebarPatient() {
 
   return (
     <>
-      <div className="container mx-auto px-4 py-8">
+      <div className="container mx-auto px-4 py-8 ">
         <div className="flex justify-between items-center mb-8">
           <Typography.Title level={2} className="text-2xl font-semibold text-gray-800">
             Patient List

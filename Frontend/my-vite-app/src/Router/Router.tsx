@@ -13,6 +13,7 @@ import PatientRegistered from "../pages/PatientRegistered/PatientRegistered";
 import DoctorsList from "../pages/PatientsRelated/DoctorsList/DoctorsList";
 import Signin from "../pages/Signin/Signin";
 import DoctorDetailPage from "../pages/DoctorDetail/DoctorDetailPage";
+import AppointmentUpdates from "../pages/DoctorRelated/PatientRelated/AppointmentUpdates/AppointmentUpdates";
 const AppRouter = () => {
   return (
     <Routes>
@@ -25,6 +26,7 @@ const AppRouter = () => {
       <Route path="/chooseUser" element={<ChooseUser />} />{" "}
       <Route path="/doctorsList" element={<DoctorsList />} />{" "}
       <Route path="/doctorDetail/:id" element={<DoctorDetailPage />} />
+      <Route path="/appointment-updates" element={<AppointmentUpdates />} />
       {/* <Route
         path="/doctor/dashboard"
         element={

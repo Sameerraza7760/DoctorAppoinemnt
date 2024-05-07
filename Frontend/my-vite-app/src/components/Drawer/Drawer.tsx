@@ -1,15 +1,13 @@
-import {
-  MailOutlined,
-  PhoneOutlined,
-  TrophyFilled,
-  UserOutlined,
-} from "@ant-design/icons";
+import { MailOutlined, PhoneOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, DatePicker, Drawer, Form, Input, TimePicker } from "antd";
+import { useToasts } from "react-toast-notifications";
 import usePostData from "../../hooks/usePostData";
 import { AppointmentRequest } from "../../types/type.AppoinmentRequest";
 import { DoctorData, additionalDoctorDetails } from "../../types/type.Doctor";
-import { formatDate, formatTime } from "../../utills/formatTime";
-import { useToasts } from "react-toast-notifications";
+import { formatDate, formatTime } from "../../utills/formatters";
+import { useSelector } from "react-redux";
+import { RootState } from "../../store/store";
+
 export interface ExtendedDoctorData
   extends DoctorData,
     additionalDoctorDetails {}
@@ -21,6 +19,7 @@ interface ModalProps {
 }
 
 function AppointmentDrawer({ isOpen, onClose, doctorDetail }: ModalProps) {
+  const { currentUser } = useSelector((state: RootState) => state?.user);
   const { addToast } = useToasts();
   const { postData } = usePostData();
   const [form] = Form.useForm();
@@ -37,18 +36,17 @@ function AppointmentDrawer({ isOpen, onClose, doctorDetail }: ModalProps) {
 
   const onFinish = async (data: AppointmentRequest) => {
     const { appointmentDate, appointmentTime, ...otherValues } = data;
-    const formattedDate = formatDate(appointmentDate);
-    const formattedTime = formatTime(appointmentTime);
     const formData: AppointmentRequest = {
       ...otherValues,
-      appointmentDate: formattedDate,
-      appointmentTime: formattedTime,
+      appointmentDate: formatDate(appointmentDate), //  make the date in readble format
+      appointmentTime: formatTime(appointmentTime), // make the time in readble format
       doctorId: _id,
+      status: "pending",
+      patientId: currentUser?._id,
     };
-    console.log(formData);
 
     try {
-      await postData("/api/v1/appoinment/createAppointment", formData);
+      await postData("/api/v1/appointment/createAppointment", formData);
       addToast("Appointment Request Sent", {
         appearance: "success",
         autoDismiss: true,
@@ -56,6 +54,7 @@ function AppointmentDrawer({ isOpen, onClose, doctorDetail }: ModalProps) {
       });
       form.resetFields();
       onClose();
+      console.log(formData);
     } catch (error) {
       console.log(error);
     }
@@ -64,13 +63,13 @@ function AppointmentDrawer({ isOpen, onClose, doctorDetail }: ModalProps) {
     <Drawer
       title="Appointment Request"
       onClose={onClose}
-      visible={isOpen}
+      open={isOpen}
       width="100%"
       style={{ backgroundColor: "#f0f2f5" }}
     >
       <div style={{ textAlign: "center" }}>
         <img
-          src={doctorImage}
+          src={typeof doctorImage === "string" ? doctorImage : undefined}
           alt="Doctor"
           style={{ width: "100px", borderRadius: "50%" }}
         />
@@ -139,8 +138,8 @@ function AppointmentDrawer({ isOpen, onClose, doctorDetail }: ModalProps) {
             onChange={(value) => (value ? formatTime(value.valueOf()) : null)}
           />
         </Form.Item>
-        <Form.Item name="message" label="Additional Message">
-          <Input.TextArea rows={4} placeholder="Enter any additional message" />
+        <Form.Item name="address" label="Additional address">
+          <Input.TextArea rows={1} placeholder="Enter any additional address" />
         </Form.Item>
         <Form.Item>
           <div style={{ textAlign: "center" }}>

@@ -7,5 +7,6 @@ export interface PatientData {
   password: string;
   maritalStatus: string;
   refreshToken?: string;
-  patientImage?:string
+  patientImage?: string;
+  _id?: string;
 }

@@ -1,14 +1,12 @@
-import { CalendarOutlined, UserOutlined } from '@ant-design/icons';
+import { CalendarOutlined, UserOutlined } from "@ant-design/icons";
 
 const PatientPageSidebar = () => {
-   // Fetch patient data from the backend or use dummy data
-   const patient = {
-    id: 'id',
-    name: 'John Doe',
+  const patient = {
+    id: "id",
+    name: "John Doe",
     age: 35,
-    gender: 'Male',
-    diagnosis: 'Hypertension',
-    // Add more patient details as needed
+    gender: "Male",
+    diagnosis: "Hypertension",
   };
 
   return (
@@ -17,7 +15,9 @@ const PatientPageSidebar = () => {
       <div className="bg-white rounded-lg shadow-md overflow-hidden">
         <div className="p-6">
           <div className="mb-4">
-            <h3 className="text-xl font-semibold text-blue-600">{patient.name}</h3>
+            <h3 className="text-xl font-semibold text-blue-600">
+              {patient.name}
+            </h3>
             <p className="text-gray-600">ID: {patient.id}</p>
           </div>
           <div className="grid grid-cols-2 gap-4">
@@ -38,7 +38,6 @@ const PatientPageSidebar = () => {
             <p className="text-gray-600 mb-2">Diagnosis:</p>
             <p className="font-semibold">{patient.diagnosis}</p>
           </div>
-          {/* Add more patient details */}
         </div>
       </div>
     </div>
