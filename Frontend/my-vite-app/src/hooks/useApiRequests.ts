@@ -2,7 +2,7 @@ import { useState } from "react";
 import { useUserContext } from "../contexts/UserContexts/UserProvider";
 import axios from "axios";
 
-const usePostData = () => {
+const useApiRequests = () => {
   const [isLoading, setIsLoading] = useState(false);
   const { userType } = useUserContext();
   const accessToken = localStorage.getItem("accessToken");
@@ -49,4 +49,4 @@ const usePostData = () => {
   return { isLoading, postData, putData };
 };
 
-export default usePostData;
+export default useApiRequests;

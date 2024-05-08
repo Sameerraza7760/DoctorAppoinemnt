@@ -1,7 +1,8 @@
 import { TimePicker } from "antd";
 import { useState } from "react";
-import usePostData from "../../hooks/usePostData";
+import usePostData from "../../hooks/useApiRequests";
 import Loader from "../Loader/Loader";
+import { useToasts } from "react-toast-notifications";
 import { additionalDoctorDetails } from "./../../types/type.Doctor";
 import useResourceFetch from "../../hooks/useFetch";
 
@@ -11,6 +12,7 @@ interface ModalProps {
 }
 
 function Modal({ isOpen, onClose }: ModalProps) {
+  const { addToast } = useToasts();
   const { postData, isLoading } = usePostData();
   const { data: metadata } = useResourceFetch("/api/v1/metadata");
 
@@ -69,7 +71,11 @@ function Modal({ isOpen, onClose }: ModalProps) {
     e.preventDefault();
     const url = "/api/v1/doctors/addAdditionalDetail";
     await postData(url, doctorDetails);
-
+    addToast("Additional Skills add", {
+      appearance: "success",
+      autoDismiss: true,
+      autoDismissTimeout: 3000,
+    });
     setDoctorDetails({
       experience: "",
       education: "",

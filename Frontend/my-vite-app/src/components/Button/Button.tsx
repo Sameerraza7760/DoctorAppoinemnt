@@ -5,10 +5,24 @@ interface ButtonProps {
   styling: string;
   label: string;
   isSubmitting: boolean;
+  type?: "submit" | "reset" | "button";
+  onClick?: () => void;
 }
-const Button: React.FC<ButtonProps> = ({ styling, label, isSubmitting }) => {
+
+const Button: React.FC<ButtonProps> = ({
+  styling,
+  label,
+  isSubmitting,
+  type = "submit",
+  onClick,
+}) => {
   return (
-    <button type="submit" className={styling} disabled={isSubmitting}>
+    <button
+      type={type}
+      className={styling}
+      disabled={isSubmitting}
+      onClick={onClick}
+    >
       {isSubmitting ? <CircularProgress style={{ color: "white" }} /> : label}
     </button>
   );

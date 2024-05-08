@@ -1,12 +1,14 @@
 import { Router } from "express";
 import {
   createAppointment,
-  getAppointment,
+  getDoctorAppointment,
+  getPatientsAppointment,
   acceptAppointment,
 } from "../controllers/appoinment.controller.js";
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router = Router();
 router.route("/createAppointment").post(verifyJWT, createAppointment);
-router.route("/getAppointment/:doctorId").get(getAppointment);
+router.route("/getDoctorAppointment/:doctorId").get(getDoctorAppointment);
+router.route("/getPatientAppointment/:patientId").get(getPatientsAppointment);
 router.route("/acceptappointment/:doctorId").put(verifyJWT, acceptAppointment);
 export default router;

@@ -24,7 +24,7 @@ const addAdditionalDetail = asyncHandler(async (req, res) => {
     req.user._id,
     {
       endTiming,
-      doctorImage: profileImage.url,
+      doctorImage: profileImage?.url,
       education,
       services,
       startTiming,

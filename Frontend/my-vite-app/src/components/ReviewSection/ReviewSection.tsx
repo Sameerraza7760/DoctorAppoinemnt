@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import useResourceFetch from "../../hooks/useFetch";
-import usePostData from "../../hooks/usePostData";
+import usePostData from "../../hooks/useApiRequests";
 import socket from "../../services/socketService";
 import Button from "../Button/Button";
 import { Review } from "./../../types/type.review";
