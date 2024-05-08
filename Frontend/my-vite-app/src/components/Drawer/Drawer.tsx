@@ -1,7 +1,7 @@
 import { MailOutlined, PhoneOutlined, UserOutlined } from "@ant-design/icons";
 import { Button, DatePicker, Drawer, Form, Input, TimePicker } from "antd";
 import { useToasts } from "react-toast-notifications";
-import usePostData from "../../hooks/usePostData";
+import usePostData from "../../hooks/useApiRequests";
 import { AppointmentRequest } from "../../types/type.AppoinmentRequest";
 import { DoctorData, additionalDoctorDetails } from "../../types/type.Doctor";
 import { formatDate, formatTime } from "../../utills/formatters";
@@ -42,7 +42,7 @@ function AppointmentDrawer({ isOpen, onClose, doctorDetail }: ModalProps) {
       appointmentTime: formatTime(appointmentTime), // make the time in readble format
       doctorId: _id,
       status: "pending",
-      patientId: currentUser?._id,
+      patientId: currentUser?._id
     };
 
     try {

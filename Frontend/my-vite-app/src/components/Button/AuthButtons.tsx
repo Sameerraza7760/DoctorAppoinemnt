@@ -1,30 +1,28 @@
 import { useSelector } from "react-redux";
-import { useNavigate } from "react-router-dom";
-import { RootState } from "../../store/store";
 import useLogout from "../../hooks/useLogout";
-function AuthButtons() {
+import { RootState } from "../../store/store";
+import Button from "./Button";
+interface AuthButtonsProps {
+  handleNavigation: (route: string) => void;
+}
+function AuthButtons({ handleNavigation }: AuthButtonsProps) {
   const { logout } = useLogout();
-  const navigate = useNavigate();
   const { isLoggedIn } = useSelector((state: RootState) => state.user);
 
-  const handleNavigation = (route: string) => {
-    navigate(route);
-  };
-
   return isLoggedIn ? (
-    <button
+    <Button
       onClick={logout}
-      className="inline-flex ml-5 text-gray-400 border border-gray-700 px-6 outline-4 focus:outline-none rounded"
-    >
-      Logout
-    </button>
+      label="Logout"
+      styling="inline-flex ml-5 text-gray-400 border border-gray-700 px-6 outline-4 focus:outline-none rounded"
+      isSubmitting={false}
+    />
   ) : (
-    <button
+    <Button
       onClick={() => handleNavigation("/chooseUser")}
-      className="inline-flex ml-5 text-gray-400 border border-gray-700 px-6 outline-4 focus:outline-none rounded"
-    >
-      Login
-    </button>
+      label="Login"
+      styling="inline-flex ml-5 text-gray-400 border border-gray-700 px-6 outline-4 focus:outline-none rounded"
+      isSubmitting={false}
+    />
   );
 }
 

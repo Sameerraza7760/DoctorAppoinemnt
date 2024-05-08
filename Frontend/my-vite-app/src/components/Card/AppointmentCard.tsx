@@ -1,27 +1,59 @@
 import { CalendarOutlined, ClockCircleOutlined } from "@ant-design/icons";
+import usePostData from "../../hooks/useApiRequests";
 import { AppointmentRequest } from "../../types/type.AppoinmentRequest";
-import usePostData from "../../hooks/usePostData";
-import axios from "axios";
+import socket from "../../services/socketService";
+import Button from "../Button/Button";
+import { useState } from "react";
+import { useEffect } from "react";
 interface AppointmentCard {
   appointment: AppointmentRequest;
 }
 
 function AppointmentCard({ appointment }: AppointmentCard) {
+  const [appointments, setAppointments] =
+    useState<AppointmentRequest>(appointment);
   const { putData } = usePostData();
   const { _id, fullName, appointmentDate, appointmentTime, address, status } =
-    appointment;
+    appointments;
+// console.log(status);
 
-  const updateAppointmentStatus = async () => {
+  const updateAppointmentStatus = async (status: string) => {
     const url = `/api/v1/appointment/acceptappointment/${_id}`;
-    const data = { status: "accepted" };
+    const data = { status: status };
 
     try {
       const response = await putData(url, data);
+      socket.emit("appointmentStatusUpdated", { id: _id, status: status });
       console.log("Appointment status updated:", response);
     } catch (error) {
       console.error("Error updating appointment status:", error);
     }
   };
+  useEffect(() => {
+    socket.connect();
+
+    socket.on(
+      "appointmentStatusUpdated",
+      ({ id, status }) => {
+        console.log(status);
+
+        if (id === _id) {
+          setAppointments((prevAppointments) => ({
+            ...prevAppointments,
+            status: status,
+          }));
+        }
+      },
+      
+    );
+
+    return () => {
+      socket.disconnect();
+      socket.off("appointmentStatusUpdated");
+    };
+  }, [appointments]);
+
+  console.log("e", status);
 
   return (
     <div
@@ -37,9 +69,9 @@ function AppointmentCard({ appointment }: AppointmentCard) {
           />
         </div>
         <div className="ml-4">
-          <h2 className="text-xl font-bold text-blue-800">{fullName}</h2>
           <p className="text-sm text-green-500">{address}</p>
-          <p className="text-sm text-gray-600">{status}</p>
+          <p className="text-sm text-gray-600">{status} </p>
+          <h2 className="text-xl font-bold text-blue-800">{fullName}</h2>
         </div>
       </div>
       <div className="flex items-center">
@@ -84,16 +116,24 @@ function AppointmentCard({ appointment }: AppointmentCard) {
       </div>
 
       <div className="gap-5 flex">
-        {" "}
-        <button
-          onClick={updateAppointmentStatus}
-          className="bg-blue-500 text-white px-4 py-2 rounded-md mt-4"
-        >
-          Approved
-        </button>
-        <button className="bg-red-500 text-white px-4 py-2 rounded-md mt-4">
-          Cancel
-        </button>
+        {status === "pending" && (
+          <>
+            <Button
+              onClick={() => updateAppointmentStatus("accepted")}
+              label="Approved"
+              styling="bg-blue-500 text-white px-4 py-2 rounded-md mt-4"
+              isSubmitting={false}
+              type="button"
+            />
+            <Button
+              onClick={() => updateAppointmentStatus("cancelled")}
+              label="Cancel"
+              styling="bg-red-500 text-white px-4 py-2 rounded-md mt-4"
+              isSubmitting={false}
+              type="button"
+            />
+          </>
+        )}
       </div>
     </div>
   );

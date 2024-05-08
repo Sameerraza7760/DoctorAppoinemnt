@@ -13,7 +13,8 @@ const createAppointment = asyncHandler(async (req, res) => {
     appointmentTime,
     phoneNumber,
     status,
-    patientId
+    patientId,
+    address,
   } = req.body;
   try {
     const newAppoinment = new Appointment({
@@ -25,7 +26,8 @@ const createAppointment = asyncHandler(async (req, res) => {
       appointmentTime,
       phoneNumber,
       status,
-      patientId
+      patientId,
+      address,
     });
     const savedAppointment = await newAppoinment.save();
 
@@ -47,7 +49,55 @@ const createAppointment = asyncHandler(async (req, res) => {
     res.status(500).json({ error: "Internal server error" });
   }
 });
-const getAppointment = asyncHandler(async (req, res) => {
+const getPatientsAppointment = asyncHandler(async (req, res) => {
+  const { patientId } = req.params;
+  try {
+    const appointments = await Appointment.aggregate([
+      {
+        $match: { patientId: new mongoose.Types.ObjectId(patientId) },
+      },
+      {
+        $lookup: {
+          from: "patients",
+          localField: "patientId",
+          foreignField: "_id",
+          as: "appoinments",
+        },
+      },
+      {
+        $unwind: "$appoinments",
+      },
+      {
+        $project: {
+          _id: 1,
+          doctorId: 1,
+          fullName: 1,
+          email: 1,
+          address: 1,
+          appointmentDate: 1,
+          appointmentTime: 1,
+          status: 1,
+          address: 1,
+        },
+      },
+    ]);
+
+    if (!appointments || appointments.length === 0) {
+      throw new ApiError(404, "appointments not found");
+    }
+
+    return res
+      .status(200)
+      .json(
+        new ApiResponce(200, appointments, "appointments fetched successfully")
+      );
+  } catch (error) {
+    console.error("Error fetching appointments:", error.message);
+    res.status(500).json({ error: "Internal server error" });
+  }
+});
+
+const getDoctorAppointment = asyncHandler(async (req, res) => {
   const { doctorId } = req.params;
   try {
     const appointments = await Appointment.aggregate([
@@ -74,6 +124,8 @@ const getAppointment = asyncHandler(async (req, res) => {
           address: 1,
           appointmentDate: 1,
           appointmentTime: 1,
+          status: 1,
+          address: 1,
         },
       },
     ]);
@@ -116,4 +168,9 @@ const acceptAppointment = asyncHandler(async (req, res) => {
   }
 });
 
-export { createAppointment, getAppointment, acceptAppointment };
+export {
+  createAppointment,
+  acceptAppointment,
+  getDoctorAppointment,
+  getPatientsAppointment,
+};

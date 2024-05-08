@@ -81,7 +81,7 @@ function Header() {
             </li>
             <li>
               {" "}
-              <AuthButtons />
+              <AuthButtons handleNavigation={handleNavigation} />
             </li>
           </ul>
           <div className="loginHamBurger px-4 py-2">
@@ -110,7 +110,7 @@ function Header() {
                   )}
                   <li className="px-4 py-2">
                     {" "}
-                    <AuthButtons />
+                    <AuthButtons handleNavigation={handleNavigation} />
                   </li>
                 </ul>
               </div>
