@@ -4,7 +4,7 @@ export interface AppointmentRequest {
   email: string;
   phoneNumber: number;
   address?: string;
-  patientId: string;
+  patientId: string | undefined;
   appointmentDate: string;
   appointmentTime: string;
   _id?: string | undefined;

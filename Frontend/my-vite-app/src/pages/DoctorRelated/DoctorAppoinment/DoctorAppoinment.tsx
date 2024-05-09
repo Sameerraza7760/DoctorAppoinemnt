@@ -21,7 +21,6 @@ const DoctorAppointment = () => {
     return <Loader />;
   }
 
-  // useEffect(()=>())
   return (
     <div className="container mx-auto px-4 py-8 bg-gray-100 rounded-lg shadow-md my-4 w-[90%]">
       <h1 className="text-3xl font-bold text-blue-800 mb-8">Appointments</h1>

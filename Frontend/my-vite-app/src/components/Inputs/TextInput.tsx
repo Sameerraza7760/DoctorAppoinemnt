@@ -1,10 +1,12 @@
 import { forwardRef } from "react";
-
+import { ChangeEvent } from "react";
 interface TextInputProps {
   label: string;
   id: string;
   name: string;
   type: string;
+  value?: string | number;
+  onChange?: (event: ChangeEvent<HTMLInputElement>) => void;
 }
 
 const TextInput = forwardRef<HTMLInputElement, TextInputProps>(

@@ -6,6 +6,4 @@ export type UserContextType = {
   setUserType: React.Dispatch<React.SetStateAction<UserType | null>>;
 };
 
-export const UserContext = createContext<UserContextType | null>(
-  null
-);
+export const UserContext = createContext<UserContextType | null>(null);
