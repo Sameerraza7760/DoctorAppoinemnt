@@ -2,13 +2,13 @@ import { useEffect, useState } from "react";
 import AlertNotification from "../../../components/Toast/AlertNotification";
 const DoctorNotification = () => {
   const [isVisible, setIsVisible] = useState(true);
-  const type = "success"; // Change this to 'error' for an error notification
-  const message = "This is a sample notification message"; // Change this to your desired message
+  const type = "success";
+  const message = "This is a sample notification message";
 
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsVisible(false);
-    }, 5000); 
+    }, 5000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -19,7 +19,11 @@ const DoctorNotification = () => {
   return (
     <>
       {isVisible && (
-        <AlertNotification type={type} message={message} onClose={handleClose} />
+        <AlertNotification
+          type={type}
+          message={message}
+          onClose={handleClose}
+        />
       )}
       <div className="w-full">
         <h1 className="text-3xl text-center font-serif font-semibold mb-4 text-blue-800 mt-4">

@@ -4,6 +4,7 @@ import ReviewSection from "../../components/ReviewSection/ReviewSection";
 import useResourceFetch from "../../hooks/useFetch";
 import useToggle from "../../hooks/useToggle";
 import { DoctorData, additionalDoctorDetails } from "../../types/type.Doctor";
+import Button from "../../components/Button/Button";
 import AppointmentDrawer from "./../../components/Drawer/Drawer";
 export interface ExtendedDoctorData
   extends DoctorData,
@@ -60,12 +61,12 @@ const DoctorDetailPage = () => {
             Dr. {doctor.fullName} is a board-certified physician with over 15
             years of experience...
           </p>
-          <button
+          <Button
+            label="Book Appointment"
             onClick={open}
-            className="mt-4 px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-300 ease-in-out"
-          >
-            Book Appointment
-          </button>
+            type="button"
+            styling="mt-4 px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-300 ease-in-out"
+          />
         </section>
         <section className="bg-white shadow-md rounded-md p-6 mb-8">
           <h2 className="text-xl font-semibold mb-4 text-gray-800">

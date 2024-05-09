@@ -1,15 +1,13 @@
-import React from "react";
 import {
   CheckCircleOutlined,
   ClockCircleOutlined,
   CloseCircleOutlined,
 } from "@ant-design/icons";
-
-import useResourceFetch from "../../../../hooks/useFetch";
 import { useSelector } from "react-redux";
+import Loader from "../../../../components/Loader/Loader";
+import useResourceFetch from "../../../../hooks/useFetch";
 import { RootState } from "../../../../store/store";
 import { AppointmentRequest } from "../../../../types/type.AppoinmentRequest";
-import Loader from "../../../../components/Loader/Loader";
 const AppointmentUpdates = () => {
   const { currentUser } = useSelector((state: RootState) => state?.user);
 
@@ -25,12 +23,12 @@ const AppointmentUpdates = () => {
   console.log(data);
   const getStatusIcon = (status: string) => {
     switch (status) {
-      case "Confirmed":
-        return <CheckCircleOutlined style={{ color: "#52c41a" }} />;
+      case "Accepted":
+        return <CheckCircleOutlined className="text-blue-500" />;
       case "Pending":
-        return <ClockCircleOutlined style={{ color: "#faad14" }} />;
+        return <ClockCircleOutlined className="text-green-500" />;
       case "Cancelled":
-        return <CloseCircleOutlined style={{ color: "#f5222d" }} />;
+        return <CloseCircleOutlined className="text-red-500" />;
       default:
         return null;
     }
@@ -51,7 +49,7 @@ const AppointmentUpdates = () => {
               <h2 className="text-lg font-semibold text-gray-800">
                 Appointment ID: {appointment._id}
               </h2>
-              {getStatusIcon(appointment.status)}
+              <span> {getStatusIcon(appointment.status)}</span>
             </div>
             <p className="text-sm text-gray-600 mb-2">
               {/* Doctor: {appointment.} */}

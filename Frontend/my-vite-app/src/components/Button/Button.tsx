@@ -4,8 +4,8 @@ import { CircularProgress } from "@mui/material";
 interface ButtonProps {
   styling: string;
   label: string;
-  isSubmitting: boolean;
-  type?: "submit" | "reset" | "button";
+  isSubmitting?: boolean;
+  type: "submit" | "reset" | "button";
   onClick?: () => void;
 }
 
