@@ -35,11 +35,11 @@ const AppointmentUpdates = () => {
   };
 
   return (
-    <div className="container mx-auto px-4 py-8 h-auto">
+    <div className="container mx-auto px-4 py-8 h-auto max-h-[calc(100vh-2rem)]">
       <h1 className="text-3xl font-semibold text-blue-600 mb-4 font-serif">
         Appointment Updates
       </h1>
-      <div className="grid grid-cols-1 gap-4 h-auto md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 gap-4 h-auto md:grid-cols-2 lg:grid-cols-3 ">
         {data?.map((appointment: AppointmentRequest, index: number) => (
           <div
             key={index}

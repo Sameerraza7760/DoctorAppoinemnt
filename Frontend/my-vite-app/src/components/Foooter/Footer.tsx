@@ -1,8 +1,11 @@
 
 function Footer() {
   return (
-    <div>
-      <footer className="text-gray-600 bg-blue-800 body-font">
+    <div className="flex flex-col min-h-screen">
+    <main className="flex-grow">
+      {/* Your main content */}
+    </main>
+    <footer className="text-gray-600 bg-blue-800 body-font bottom-0 w-full">
         <div className="container px-5 py-24 mx-auto">
           <div className="flex flex-wrap md:text-left text-center -mb-10 -mx-4">
             <div className="lg:w-1/6 md:w-1/2 w-full px-4">
