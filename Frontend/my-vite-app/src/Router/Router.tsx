@@ -7,108 +7,81 @@ import DoctorProfile from "../pages/DoctorProfile/DoctorProfile";
 import DoctorAppointment from "../pages/DoctorRelated/DoctorAppoinment/DoctorAppoinment";
 import DoctorHome from "../pages/DoctorRelated/DoctorHome/DoctorHome";
 import AppointmentUpdates from "../pages/DoctorRelated/PatientRelated/AppointmentUpdates/AppointmentUpdates";
-import DoctorSidebarPatient from "../pages/DoctorSidebarPatient/DoctorSidebarPatient";
 import Home from "../pages/Home/Home";
 import Patientprofile from "../pages/PatientProfile/Patientprofile";
 import PatientRegistered from "../pages/PatientRegistered/PatientRegistered";
 import DoctorsList from "../pages/PatientsRelated/DoctorsList/DoctorsList";
 import Signin from "../pages/Signin/Signin";
 import ProtectedRoute from "./ProtectedRoute";
+const routes = [
+  { path: "/", element: <Home /> },
+  { path: "/doctor-profile", isProtected: true, element: <DoctorProfile /> },
+  { path: "/patient-profile", isProtected: true, element: <Patientprofile /> },
+  {
+    path: "/register/doctor",
+    isProtected: false,
+    element: <DocterRegestered />,
+  },
+  {
+    path: "/register/patient",
+    isProtected: false,
+    element: <PatientRegistered />,
+  },
+  { path: "/login", isProtected: false, element: <Signin /> },
+  { path: "/chooseUser", isProtected: false, element: <ChooseUser /> },
+  { path: "/doctorsList", isProtected: false, element: <DoctorsList /> },
+  {
+    path: "/doctorDetail/:id",
+    isProtected: true,
+    element: <DoctorDetailPage />,
+  },
+  {
+    path: "/appointment-updates",
+    isProtected: true,
+    element: <AppointmentUpdates />,
+  },
+  {
+    path: "/doctor/home",
+    isProtected: false,
+    element: (
+      <DoctorLayout>
+        <DoctorHome />
+      </DoctorLayout>
+    ),
+  },
+
+  {
+    path: "/Profile",
+    isProtected: true,
+    element: (
+      <DoctorLayout>
+        <DoctorProfile />
+      </DoctorLayout>
+    ),
+  },
+  {
+    path: "/doctor/Appoinments",
+    isProtected: true,
+    element: (
+      <DoctorLayout>
+        <DoctorAppointment />
+      </DoctorLayout>
+    ),
+  },
+];
+
 const AppRouter = () => {
   return (
     <Routes>
-      <Route path="/" element={<Home />} />
-      <Route
-        path="/doctor-profile"
-        element={
-          <ProtectedRoute>
-            <DoctorProfile />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/patient-profile"
-        element={
-          <ProtectedRoute>
-            <Patientprofile />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/register/doctor"
-        element={
-          <ProtectedRoute>
-            <DocterRegestered />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/register/patient"
-        element={
-          <ProtectedRoute>
-            <PatientRegistered />
-          </ProtectedRoute>
-        }
-      />{" "}
-      <Route path="/login" element={<Signin />} />
-      <Route path="/chooseUser" element={<ChooseUser />} />{" "}
-      <Route path="/doctorsList" element={<DoctorsList />} />{" "}
-      <Route
-        path="/doctorDetail/:id"
-        element={
-          <ProtectedRoute>
-            <DoctorDetailPage />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/appointment-updates"
-        element={
-          <ProtectedRoute>
-            <AppointmentUpdates />
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/doctor/home"
-        element={
-          <ProtectedRoute>
-            <DoctorLayout>
-              <DoctorHome />
-            </DoctorLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/doctor/Patients"
-        element={
-          <ProtectedRoute>
-            <DoctorLayout>
-              <DoctorSidebarPatient />
-            </DoctorLayout>
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/doctor/Profile"
-        element={
-          <ProtectedRoute>
-            <DoctorLayout>
-              <DoctorProfile />
-            </DoctorLayout>{" "}
-          </ProtectedRoute>
-        }
-      />
-      <Route
-        path="/doctor/Appoinments"
-        element={
-          <ProtectedRoute>
-            <DoctorLayout>
-              <DoctorAppointment />
-            </DoctorLayout>
-          </ProtectedRoute>
-        }
-      />
+      {routes.map(({ path, isProtected, element }) => (
+        <Route
+          key={path}
+          path={path}
+          element={
+            isProtected ? <ProtectedRoute>{element}</ProtectedRoute> : element
+          }
+        />
+      ))}
     </Routes>
   );
 };

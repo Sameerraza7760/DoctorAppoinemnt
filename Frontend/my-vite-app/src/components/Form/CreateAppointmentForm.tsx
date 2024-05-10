@@ -9,11 +9,20 @@ import { formatDate, formatTime } from "../../utills/formatters";
 import Button from "../Button/Button";
 import TextInput from "../Inputs/TextInput";
 import socket from "../../services/socketService";
+import useResourceFetch from "../../hooks/useFetch";
+import moment from "moment";
+
 interface CreateAppointmentFormProps {
   doctorId: string;
 }
 
 function CreateAppointmentForm({ doctorId }: CreateAppointmentFormProps) {
+  const [isTimeAvailable, setIsTimeAvailable] = useState<boolean>(false);
+  const { data: doctorAppointments } = useResourceFetch(
+    `/api/v1/appointment/getDoctorAppointment/${doctorId}`
+  );
+  console.log(doctorAppointments);
+
   const { currentUser } = useSelector((state: RootState) => state?.user);
   const { addToast } = useToasts();
   const { postData, isLoading } = useApiRequests();
@@ -27,6 +36,46 @@ function CreateAppointmentForm({ doctorId }: CreateAppointmentFormProps) {
     appointmentTime: "",
     status: "Pending",
   });
+  const checkAvailability = () => {
+    const selectedDateTime = new Date(
+      `${formData.appointmentDate} ${formData.appointmentTime}`
+    );
+
+    const overlappingAppointment = doctorAppointments?.data?.find(
+      (appointment: AppointmentRequest) => {
+        const appointmentDateTime = new Date(
+          `${appointment.appointmentDate} ${appointment.appointmentTime}`
+        );
+        console.log("d", appointmentDateTime);
+
+        // Convert both selectedDateTime and appointmentDateTime to timestamps for comparison
+        const selectedTimestamp = selectedDateTime.getTime();
+        const appointmentTimestamp = appointmentDateTime.getTime();
+
+        return (
+          Math.abs(selectedTimestamp - appointmentTimestamp) < 30 * 60 * 1000
+        );
+      }
+    );
+
+    if (overlappingAppointment) {
+      addToast(
+        "This appointment slot is already booked. Please select another time.",
+        {
+          appearance: "error",
+          autoDismiss: true,
+          autoDismissTimeout: 3000,
+        }
+      );
+    } else {
+      setIsTimeAvailable(true);
+    }
+
+    //The logical NOT operator ! negates the value of overlappingAppointment.
+    // So, if overlappingAppointment is undefined, !overlappingAppointment evaluates
+    //to true. If overlappingAppointment contains an appointment object, !overlappingAppointment
+    // evaluates to false.
+  };
 
   const handleInputChange = (
     e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -38,14 +87,14 @@ function CreateAppointmentForm({ doctorId }: CreateAppointmentFormProps) {
     }));
   };
 
-  const handleDateChange = (date: moment.Moment | null) => {
+  const handleDateChange = (date: string) => {
     setFormData((prevData) => ({
       ...prevData,
       appointmentDate: formatDate(date),
     }));
   };
 
-  const handleTimeChange = (time: moment.Moment | null) => {
+  const handleTimeChange = (time: string) => {
     setFormData((prevData) => ({
       ...prevData,
       appointmentTime: formatTime(time),
@@ -63,6 +112,7 @@ function CreateAppointmentForm({ doctorId }: CreateAppointmentFormProps) {
         autoDismissTimeout: 3000,
       });
       socket.emit("createAppointment", doctorId);
+      setIsTimeAvailable(false);
     } catch (error) {
       console.error("Error submitting form:", error);
     }
@@ -70,7 +120,7 @@ function CreateAppointmentForm({ doctorId }: CreateAppointmentFormProps) {
   return (
     <>
       {" "}
-      <form onSubmit={onFinish}>
+      <div>
         <div className="mt-8">
           {" "}
           <TextInput
@@ -122,14 +172,25 @@ function CreateAppointmentForm({ doctorId }: CreateAppointmentFormProps) {
         </div>
 
         <div style={{ textAlign: "center" }}>
-          <Button
-            label="Submit Appointment Request"
-            styling="mt-4 px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-300 ease-in-out"
-            isSubmitting={isLoading}
-            type="submit"
-          />
+          {isTimeAvailable ? (
+            <Button
+              label="Create Appointment"
+              styling="mt-4 px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-300 ease-in-out"
+              isSubmitting={isLoading}
+              type="submit"
+              onClick={onFinish}
+            />
+          ) : (
+            <Button
+              label="Check Avaiblity"
+              styling="mt-4 px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-300 ease-in-out"
+              isSubmitting={isLoading}
+              type="submit"
+              onClick={checkAvailability}
+            />
+          )}
         </div>
-      </form>
+      </div>
     </>
   );
 }

@@ -143,8 +143,7 @@ const getDoctorAppointment = asyncHandler(async (req, res) => {
     console.error("Error fetching appointments:", error.message);
     res.status(500).json({ error: "Internal server error" });
   }
-});
-const acceptAppointment = asyncHandler(async (req, res) => {
+});const updateAppointment = asyncHandler(async (req, res) => {
   const { doctorId } = req.params;
   const { status } = req.body;
 
@@ -170,7 +169,7 @@ const acceptAppointment = asyncHandler(async (req, res) => {
 
 export {
   createAppointment,
-  acceptAppointment,
+  updateAppointment,
   getDoctorAppointment,
   getPatientsAppointment,
 };
