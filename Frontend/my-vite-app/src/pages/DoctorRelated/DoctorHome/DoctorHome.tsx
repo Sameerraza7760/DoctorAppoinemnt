@@ -12,13 +12,13 @@ function DoctorHome() {
   const [notificationMessage, setNotificationMessage] = useState("");
   const appointmentSummary = 25;
   const patientStatistics = 150;
-  const type = "success";
 
   const upcomingTasks = [
     { id: 1, title: "Review patient reports", time: "9:00 AM" },
     { id: 2, title: "Consultation with Mr. Smith", time: "10:30 AM" },
     { id: 3, title: "Follow-up call with Ms. Johnson", time: "2:00 PM" },
   ];
+
   useEffect(() => {
     socket.connect();
     socket.on("notificationSendToTheDoctor", ({ doctorId, message }) => {
@@ -40,6 +40,7 @@ function DoctorHome() {
     }, 5000);
     return () => clearTimeout(timer);
   }, [isVisible]);
+
   const handleClose = () => {
     setIsVisible(false);
   };
@@ -48,7 +49,7 @@ function DoctorHome() {
       {" "}
       {isVisible && (
         <AlertNotification
-          type={type}
+          type="success"
           message={notificationMessage}
           onClose={handleClose}
         />
@@ -69,7 +70,6 @@ function DoctorHome() {
             </p>
           </div>
 
-          {/* Patient Statistics */}
           <div className="bg-doctor-Statistics cursor-pointer bg-white p-6 rounded-md shadow-md transition duration-300 transform hover:scale-105 hover:bg-gray-100">
             <h3 className="text-2xl font-semibold mb-2 text-white ">
               Patient Statistics
@@ -79,7 +79,7 @@ function DoctorHome() {
             </p>
           </div>
 
-          {/* Upcoming Tasks */}
+          
           <div className="upcommingTask cursor-pointer bg-white p-6 rounded-md shadow-md transition duration-300 transform hover:scale-105 hover:bg-gray-100">
             <h3 className="text-lg font-semibold mb-2 text-white">
               Upcoming Tasks

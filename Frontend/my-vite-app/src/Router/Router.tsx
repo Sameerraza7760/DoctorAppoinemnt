@@ -2,80 +2,113 @@ import { Route, Routes } from "react-router-dom";
 import DoctorLayout from "../components/Layout/DoctorSideBarLayout";
 import ChooseUser from "../pages/ChooseUser/ChooseUser";
 import DocterRegestered from "../pages/DocterRegestered/DocterRegestered";
+import DoctorDetailPage from "../pages/DoctorDetail/DoctorDetailPage";
 import DoctorProfile from "../pages/DoctorProfile/DoctorProfile";
 import DoctorAppointment from "../pages/DoctorRelated/DoctorAppoinment/DoctorAppoinment";
 import DoctorHome from "../pages/DoctorRelated/DoctorHome/DoctorHome";
-import DoctorNotification from "../pages/DoctorRelated/DoctorNotification/DoctorNotification";
+import AppointmentUpdates from "../pages/DoctorRelated/PatientRelated/AppointmentUpdates/AppointmentUpdates";
 import DoctorSidebarPatient from "../pages/DoctorSidebarPatient/DoctorSidebarPatient";
 import Home from "../pages/Home/Home";
 import Patientprofile from "../pages/PatientProfile/Patientprofile";
 import PatientRegistered from "../pages/PatientRegistered/PatientRegistered";
 import DoctorsList from "../pages/PatientsRelated/DoctorsList/DoctorsList";
 import Signin from "../pages/Signin/Signin";
-import DoctorDetailPage from "../pages/DoctorDetail/DoctorDetailPage";
-import AppointmentUpdates from "../pages/DoctorRelated/PatientRelated/AppointmentUpdates/AppointmentUpdates";
+import ProtectedRoute from "./ProtectedRoute";
 const AppRouter = () => {
   return (
     <Routes>
       <Route path="/" element={<Home />} />
-      <Route path="/doctor-profile" element={<DoctorProfile />} />
-      <Route path="/patient-profile" element={<Patientprofile />} />
-      <Route path="/register/doctor" element={<DocterRegestered />} />
-      <Route path="/register/patient" element={<PatientRegistered />} />{" "}
+      <Route
+        path="/doctor-profile"
+        element={
+          <ProtectedRoute>
+            <DoctorProfile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/patient-profile"
+        element={
+          <ProtectedRoute>
+            <Patientprofile />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/register/doctor"
+        element={
+          <ProtectedRoute>
+            <DocterRegestered />
+          </ProtectedRoute>
+        }
+      />
+      <Route
+        path="/register/patient"
+        element={
+          <ProtectedRoute>
+            <PatientRegistered />
+          </ProtectedRoute>
+        }
+      />{" "}
       <Route path="/login" element={<Signin />} />
       <Route path="/chooseUser" element={<ChooseUser />} />{" "}
       <Route path="/doctorsList" element={<DoctorsList />} />{" "}
-      <Route path="/doctorDetail/:id" element={<DoctorDetailPage />} />
-      <Route path="/appointment-updates" element={<AppointmentUpdates />} />
-      {/* <Route
-        path="/doctor/dashboard"
+      <Route
+        path="/doctorDetail/:id"
         element={
-          <DoctorLayout>
-            <DoctorDashboard />
-          </DoctorLayout>
+          <ProtectedRoute>
+            <DoctorDetailPage />
+          </ProtectedRoute>
         }
-      /> */}
+      />
+      <Route
+        path="/appointment-updates"
+        element={
+          <ProtectedRoute>
+            <AppointmentUpdates />
+          </ProtectedRoute>
+        }
+      />
       <Route
         path="/doctor/home"
         element={
-          <DoctorLayout>
-            <DoctorHome />
-          </DoctorLayout>
+          <ProtectedRoute>
+            <DoctorLayout>
+              <DoctorHome />
+            </DoctorLayout>
+          </ProtectedRoute>
         }
       />
       <Route
         path="/doctor/Patients"
         element={
-          <DoctorLayout>
-            <DoctorSidebarPatient />
-          </DoctorLayout>
+          <ProtectedRoute>
+            <DoctorLayout>
+              <DoctorSidebarPatient />
+            </DoctorLayout>
+          </ProtectedRoute>
         }
       />
       <Route
         path="/doctor/Profile"
         element={
-          <DoctorLayout>
-            <DoctorProfile />
-          </DoctorLayout>
+          <ProtectedRoute>
+            <DoctorLayout>
+              <DoctorProfile />
+            </DoctorLayout>{" "}
+          </ProtectedRoute>
         }
       />
       <Route
         path="/doctor/Appoinments"
         element={
-          <DoctorLayout>
-            <DoctorAppointment />
-          </DoctorLayout>
+          <ProtectedRoute>
+            <DoctorLayout>
+              <DoctorAppointment />
+            </DoctorLayout>
+          </ProtectedRoute>
         }
       />
-      <Route
-        path="/doctor/Notifications"
-        element={
-          <DoctorLayout>
-            <DoctorNotification />
-          </DoctorLayout>
-        }
-      />
-      {/* <Route path="/doctor/Patients" element={<DoctorSidebarPatient />} /> */}
     </Routes>
   );
 };
