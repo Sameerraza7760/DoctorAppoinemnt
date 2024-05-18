@@ -13,7 +13,6 @@ const addReview = asyncHandler(async (req, res) => {
       date,
     });
     const savedReview = await newReview.save();
-    // io.emit("reviewsFetched", { savedReview });
 
     res
       .status(201)

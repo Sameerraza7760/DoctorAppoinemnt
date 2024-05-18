@@ -1,19 +1,24 @@
 import { Drawer } from "antd";
-
 import { DoctorData, additionalDoctorDetails } from "../../types/type.Doctor";
 import { formatTime } from "../../utills/formatters";
 import CreateAppointmentForm from "../Form/CreateAppointmentForm";
-export interface ExtendedDoctorData
-  extends DoctorData,
-    additionalDoctorDetails {}
+import PatientChatRoom from "./../../pages/Chat/PatientChat";
 
-interface ModalProps {
+interface ExtendedDoctorData extends DoctorData, additionalDoctorDetails {}
+
+interface AppointmentDrawerProps {
   isOpen: boolean;
   onClose: () => void;
   doctorDetail: ExtendedDoctorData;
+  view: string;
 }
 
-function AppointmentDrawer({ isOpen, onClose, doctorDetail }: ModalProps) {
+const AppointmentDrawer: React.FC<AppointmentDrawerProps> = ({
+  isOpen,
+  onClose,
+  doctorDetail,
+  view,
+}) => {
   const {
     doctorImage,
     startTiming,
@@ -24,34 +29,41 @@ function AppointmentDrawer({ isOpen, onClose, doctorDetail }: ModalProps) {
     _id,
   } = doctorDetail;
 
+  const renderDoctorInfo = () => (
+    <div style={{ textAlign: "center" }} className="w-[90%] mx-auto">
+      <img
+        src={typeof doctorImage === "string" ? doctorImage : undefined}
+        alt="Doctor's Profile Picture"
+        className="w-16 h-16 rounded-full pl-6 "
+      />
+      <h2 style={{ margin: "10px 0", color: "#333", fontSize: "17px" }}>
+        Dr: {fullName}
+      </h2>
+      <p style={{ color: "#666", fontSize: "17px" }}>
+        Availability: {startDay} to {endDay}, {formatTime(startTiming)} to{" "}
+        {formatTime(endTiming)}
+      </p>
+    </div>
+  );
+
   return (
     <Drawer
       title="Appointment Request"
       onClose={onClose}
-      open={isOpen}
+      visible={isOpen}
       width="100%"
       style={{ backgroundColor: "#f0f2f5" }}
     >
-      <div style={{ textAlign: "center" }}>
-        <img
-          src={typeof doctorImage === "string" ? doctorImage : undefined}
-          alt="Doctor"
-          style={{ width: "100px", borderRadius: "50%" }}
-        />
-        <h2 style={{ margin: "10px 0", color: "#333", fontSize: "17px" }}>
-          {fullName}
-        </h2>
-        <p style={{ color: "#666", fontSize: "17px" }}>
-          Availability: {startDay} to {endDay}, {formatTime(startTiming)} to{" "}
-          {formatTime(endTiming)}
-        </p>
-      </div>
+      {renderDoctorInfo()}
       <div className="form w-[90%] mx-auto">
-        {" "}
-        <CreateAppointmentForm doctorId={_id} />{" "}
+        {view === "createAppointmentForm" ? (
+          <CreateAppointmentForm doctorId={_id} />
+        ) : (
+          <PatientChatRoom doctorId={_id} />
+        )}
       </div>
     </Drawer>
   );
-}
+};
 
 export default AppointmentDrawer;
