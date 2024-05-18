@@ -14,16 +14,29 @@ function AppointmentCard({ appointment }: AppointmentCard) {
   const [appointments, setAppointments] =
     useState<AppointmentRequest>(appointment);
   const { putData } = usePostData();
-  const { _id, fullName, appointmentDate, appointmentTime, address, status } =
-    appointments;
+  const {
+    _id,
+    fullName,
+    appointmentDate,
+    appointmentTime,
+    address,
+    status,
+    patientId,
+  } = appointments;
+  console.log(appointments);
 
+  console.log("f", patientId);
   const updateAppointmentStatus = async (status: string) => {
     const url = `/api/v1/appointment/acceptappointment/${_id}`;
     const data = { status: status };
 
     try {
       const response = await putData(url, data);
-      socket.emit("appointmentStatusUpdated", { id: _id, status: status });
+      socket.emit("appointmentStatusUpdated", {
+        id: _id,
+        status: status,
+      });
+      socket.emit("sendNotificationtoPatient", { patientId, status });
       console.log("Appointment status updated:", response);
     } catch (error) {
       console.error("Error updating appointment status:", error);

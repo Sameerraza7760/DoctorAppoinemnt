@@ -111,6 +111,7 @@ const ReviewSection = ({ doctorId }: reviewSectionProps) => {
             rows={4}
           ></textarea>
           <Button
+            type="submit"
             label="Add Review"
             isSubmitting={isLoading}
             styling="mt-4 px-6 py-3 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 transition duration-300 ease-in-out"
