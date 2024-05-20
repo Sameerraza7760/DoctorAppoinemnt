@@ -48,15 +48,15 @@ const useLogin = (url: string, Schema: SchemaType) => {
         autoDismiss: true,
         autoDismissTimeout: 3000,
       });
-    } catch (error) {
-      if (error instanceof Error) {
+    } catch (error: any) {
+      if (error) {
         addToast(error.message, {
           appearance: "error",
           autoDismiss: true,
           autoDismissTimeout: 3000,
         });
       } else {
-        console.error("Error registering:", error.message);
+        console.error("Error registering:", error);
       }
     }
   };

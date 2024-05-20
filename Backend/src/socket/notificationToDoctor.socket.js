@@ -7,8 +7,6 @@ const handleReviewAdded = (socket, io) => {
       message: notificationMessage,
     });
   });
-
-
 };
 
 export default handleReviewAdded;

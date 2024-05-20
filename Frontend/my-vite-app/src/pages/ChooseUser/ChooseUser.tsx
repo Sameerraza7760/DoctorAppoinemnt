@@ -29,7 +29,7 @@ function ChooseUser() {
         <div
           className={`${
             userType === "doctor" ? "bg-blue-500" : "bg-gray-300"
-          } h-1/5 w-3/4 mx-auto p-8 sm:rounded-lg text-lg cursor-pointer shadow-md`}
+          } h-1/5  w-full sm:w-[90%] mx-auto p-8 sm:rounded-lg text-lg cursor-pointer shadow-md`}
           onClick={() => handleUserSelection("doctor")}
         >
           <div className="flex gap-4">
@@ -57,7 +57,7 @@ function ChooseUser() {
         <div
           className={`${
             userType === "patient" ? "bg-blue-500" : "bg-gray-300"
-          } h-1/5 w-3/4 mx-auto p-8 sm:rounded-lg text-lg cursor-pointer shadow-md`}
+          } h-1/5 w-full sm:w-[90%] mx-auto p-8 sm:rounded-lg text-lg cursor-pointer shadow-md`}
           onClick={() => handleUserSelection("patient")}
         >
           <div className="flex gap-4">
@@ -78,7 +78,7 @@ function ChooseUser() {
             Can Book Appointment
           </p>
         </div>
-        <div className="flex-col gap-3 flex w-[300px] mx-auto ">
+        <div className="flex-col gap-3 flex w-[300px] mx-auto items-center ">
           <button
             onClick={() => navigate(`/register/${userType}`)}
             type="button"

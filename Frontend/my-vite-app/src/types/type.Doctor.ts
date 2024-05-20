@@ -14,14 +14,14 @@ export interface DoctorData {
 }
 
 export interface additionalDoctorDetails {
-  additionalExperience: number;
   education: string;
   services: string[];
   startTiming: number;
   endTiming: number;
   doctorImage: File | null;
-  startDay: string;
-  endDay: string;
+  startDay?: string;
+
+  endDay?: string;
 }
 
 export interface ExtendedDoctorData

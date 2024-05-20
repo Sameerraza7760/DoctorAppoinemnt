@@ -13,7 +13,7 @@ import PatientRegistered from "../pages/PatientRegistered/PatientRegistered";
 import DoctorsList from "../pages/PatientsRelated/DoctorsList/DoctorsList";
 import Signin from "../pages/Signin/Signin";
 import ProtectedRoute from "./ProtectedRoute";
-import DoctorChat from "../pages/Chat/DoctorChat";
+import DoctorChat from "../pages/Chat/DoctorChatRoom/DoctorChat";
 const routes = [
   { path: "/", isProtected: false, element: <Home /> },
   { path: "/doctor-profile", isProtected: true, element: <DoctorProfile /> },
@@ -30,7 +30,7 @@ const routes = [
   },
   { path: "/login", isProtected: false, element: <Signin /> },
   { path: "/chooseUser", isProtected: false, element: <ChooseUser /> },
-  { path: "/doctorsList", isProtected: false, element: <DoctorsList /> },
+  { path: "/doctorsList", isProtected: true, element: <DoctorsList /> },
   {
     path: "/doctorDetail/:id",
     isProtected: true,
@@ -43,7 +43,7 @@ const routes = [
   },
   {
     path: "/doctor/home",
-    isProtected: false,
+    isProtected: true,
     element: (
       <DoctorLayout>
         <DoctorHome />
@@ -52,7 +52,7 @@ const routes = [
   },
 
   {
-    path: "/Profile",
+    path: "doctor/Profile",
     isProtected: true,
     element: (
       <DoctorLayout>

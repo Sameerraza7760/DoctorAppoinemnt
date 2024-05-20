@@ -5,7 +5,7 @@ export function getStatusColor(status: string) {
     case "Accepted":
       return " text-blue-800";
     case "Cancelled":
-      return "bg-red-200 text-red-800";
+      return " text-red-800";
     default:
       return " text-gray-800";
   }

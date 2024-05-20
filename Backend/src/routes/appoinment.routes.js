@@ -8,7 +8,8 @@ import {
 import { verifyJWT } from "../middlewares/auth.middleware.js";
 const router = Router();
 router.route("/createAppointment").post(verifyJWT, createAppointment);
+
 router.route("/getDoctorAppointment/:doctorId").get(getDoctorAppointment);
 router.route("/getPatientAppointment/:patientId").get(getPatientsAppointment);
-router.route("/acceptappointment/:doctorId").put(verifyJWT, updateAppointment);
+router.route("/acceptappointment/:doctorId").put(updateAppointment);
 export default router;

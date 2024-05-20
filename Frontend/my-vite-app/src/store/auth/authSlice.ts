@@ -27,6 +27,7 @@ const userSlice = createSlice({
     removeCurrentUser: (state) => {
       state.currentUser = null;
       state.isLoggedIn = false;
+      
     },
   },
 });

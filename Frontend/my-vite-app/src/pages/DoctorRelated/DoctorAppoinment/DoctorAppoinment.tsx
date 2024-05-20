@@ -14,6 +14,7 @@ const DoctorAppointment = () => {
   useEffect(() => {
     if (requestedAppointments) {
       setAppointments(requestedAppointments?.data);
+      console.log("d",requestedAppointments?.data)
     }
   }, [requestedAppointments]);
 

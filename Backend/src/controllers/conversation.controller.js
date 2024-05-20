@@ -1,36 +1,25 @@
-import { Message } from "../models/message.models.js";
-import { asyncHandler } from "../utills/asyncHandler.js";
+import mongoose from "mongoose";
+
 import { ApiError } from "../utills/ApiError.js";
 import { ApiResponce } from "../utills/ApiResponce.js";
-import { Patient } from "../models/patient.models.js";
-import mongoose from "mongoose";
+import { asyncHandler } from "../utills/asyncHandler.js";
+import { Conversation } from "./../models/message.models.js";
+
 const sendMessage = asyncHandler(async (req, res) => {
+  const { patientId, doctorId, senderId, message } = req.body;
+
   try {
-    const { senderId } = req.params;
-    const { receiverId, content, senderType, receiverType } = req.body;
-
-    const message = new Message({
-      senderId: senderId,
-      receiverId: receiverId,
-      content: content,
-      senderType: senderType,
-      receiverType: receiverType,
-    });
-
-    const savedMessage = await message.save();
-    if (!savedMessage) {
-      throw new ApiError(500, "Error On Sent Message");
+    let conversation = await Conversation.findOne({ patientId, doctorId });
+    if (!conversation) {
+      conversation = new Conversation({ patientId, doctorId, messages: [] });
     }
 
-    return res.status(200).json(
-      new ApiResponce(200, {
-        message: "Message sent successfully",
-        data: message,
-      })
-    );
+    conversation.messages.push({ senderId, message });
+    await conversation.save();
+
+    res.status(201).json({ status: "Message sent" });
   } catch (error) {
-    console.error("Error sending message:", error);
-    res.status(500).json({ error: "Internal server error" });
+    res.status(500).json({ error: error.message });
   }
 });
 
@@ -41,17 +30,16 @@ const getPatientNames = asyncHandler(async (req, res) => {
       throw new ApiError(400, "doctorId is required");
     }
 
-    const patientNames = await Message.aggregate([
+    const patientNames = await Conversation.aggregate([
       {
         $match: {
-          receiverId: new mongoose.Types.ObjectId(doctorId),
-          senderType: "Patient",
+          doctorId: new mongoose.Types.ObjectId(doctorId),
         },
       },
       {
         $lookup: {
           from: "patients",
-          localField: "senderId",
+          localField: "patientId",
           foreignField: "_id",
           as: "patientDetails",
         },
@@ -83,60 +71,32 @@ const getPatientNames = asyncHandler(async (req, res) => {
 });
 
 const getMessages = asyncHandler(async (req, res) => {
+  const { patientId, doctorId } = req.query;
+
   try {
-    const { senderId, receiverId, senderType, receiverType } = req.body;
-
-    if (!senderId || !receiverId || !senderType || !receiverType) {
-      throw new ApiError(
-        400,
-        "SenderId, ReceiverId, SenderType, and ReceiverType are required"
-      );
-    }
-
-    if (
-      !["Doctor", "Patient"].includes(senderType) ||
-      !["Doctor", "Patient"].includes(receiverType)
-    ) {
-      throw new ApiError(400, "Invalid sender or receiver type");
-    }
-
-    const messages = await Message.aggregate([
+    const messages = await Conversation.aggregate([
       {
         $match: {
-          sender: mongoose.Types.ObjectId(senderId),
-          receiver: mongoose.Types.ObjectId(receiverId),
+          patientId: new mongoose.Types.ObjectId(patientId),
+          doctorId: new mongoose.Types.ObjectId(doctorId),
         },
       },
       {
-        $lookup: {
-          from: senderType.toLowerCase() + "s",
-          localField: "sender",
-          foreignField: "_id",
-          as: "senderDetails",
+        $project: {
+          messages: 1,
+          _id: 0,
         },
       },
-      {
-        $lookup: {
-          from: receiverType.toLowerCase() + "s",
-          localField: "receiver",
-          foreignField: "_id",
-          as: "receiverDetails",
-        },
-      },
-      { $unwind: "$senderDetails" },
-      { $unwind: "$receiverDetails" },
     ]);
 
-    return res.status(200).json(
-      new ApiResponce(200, {
-        message: "Messages retrieved successfully",
-        data: messages,
-      })
-    );
+    if (!messages || messages.length === 0) {
+      throw new ApiError(404, "No messages found for this patient and doctor");
+    }
+
+    res.status(200).json(messages[0].messages);
   } catch (error) {
-    console.error("Error sending message:", error);
-    res.status(500).json({ error: "Internal server error" });
+    console.error("Error fetching messages:", error.message);
+    res.status(error.statusCode || 500).json({ error: error.message });
   }
 });
-
-export { sendMessage, getMessages, getPatientNames };
+export { sendMessage, getPatientNames, getMessages };

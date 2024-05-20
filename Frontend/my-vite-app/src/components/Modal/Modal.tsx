@@ -1,32 +1,32 @@
 import { TimePicker } from "antd";
-import { useState } from "react";
-import usePostData from "../../hooks/useApiRequests";
-import Loader from "../Loader/Loader";
+import { useEffect, useState } from "react";
+import { useDispatch } from "react-redux";
 import { useToasts } from "react-toast-notifications";
-import { additionalDoctorDetails } from "./../../types/type.Doctor";
+import useApiRequest from "../../hooks/useApiRequests";
 import useResourceFetch from "../../hooks/useFetch";
+import { setCurrentUser } from "../../store/auth/authSlice";
+import { additionalDoctorDetails } from "../../types/type.Doctor";
 
 interface ModalProps {
   isOpen: boolean;
   onClose: () => void;
 }
 
+type DayOfWeek = {
+  value: string;
+  label: string;
+};
+
 function Modal({ isOpen, onClose }: ModalProps) {
+  const dispatch = useDispatch();
+
   const { addToast } = useToasts();
-  const { postData, isLoading } = usePostData();
+  const { addAdditionDoctorsDetail } = useApiRequest();
   const { data: metadata } = useResourceFetch("/api/v1/metadata");
-
-  // if (metadata === undefined || isLoading) {
-  //   return <div>No metadata available.</div>;
-  // }
-
-  // const { daysOfWeek, specialties } = metadata;
-  // console.log(metadata);
 
   const [selectedServices, setselectedServices] = useState<string[]>([]);
   const [selectedFile, setSelectedFile] = useState<File | null>(null);
   const [doctorDetails, setDoctorDetails] = useState<additionalDoctorDetails>({
-    experience: "",
     education: "",
     services: [],
     startTiming: 0,
@@ -57,6 +57,7 @@ function Modal({ isOpen, onClose }: ModalProps) {
       [name]: value,
     }));
   };
+
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (file) {
@@ -67,25 +68,56 @@ function Modal({ isOpen, onClose }: ModalProps) {
       }));
     }
   };
+
+  const handleStartTimeChange = (time: any) => {
+    setDoctorDetails((prevDetails) => ({
+      ...prevDetails,
+      startTiming: time ? time.toISOString() : "",
+    }));
+  };
+
+  const handleEndTimeChange = (time: any) => {
+    setDoctorDetails((prevDetails) => ({
+      ...prevDetails,
+      endTiming: time ? time.toISOString() : "",
+    }));
+  };
+
   const saveDoctorDetails = async (e: React.FormEvent) => {
+    console.log(doctorDetails);
     e.preventDefault();
     const url = "/api/v1/doctors/addAdditionalDetail";
-    await postData(url, doctorDetails);
-    addToast("Additional Skills add", {
+    const updatedUserDetails = await addAdditionDoctorsDetail(
+      url,
+      doctorDetails
+    );
+    if (!updatedUserDetails) return;
+    dispatch(setCurrentUser(updatedUserDetails));
+    addToast("Additional Skills added", {
       appearance: "success",
       autoDismiss: true,
       autoDismissTimeout: 3000,
     });
+
     setDoctorDetails({
-      experience: "",
       education: "",
       services: [],
       startTiming: 0,
       endTiming: 0,
-      image: null,
+      doctorImage: null,
+      startDay: "",
+      endDay: "",
     });
     onClose();
   };
+
+  useEffect(() => {
+    setDoctorDetails((prevDetails) => ({
+      ...prevDetails,
+      services: selectedServices,
+    }));
+  }, [selectedServices]);
+
   return (
     <div>
       {isOpen && (
@@ -234,12 +266,18 @@ function Modal({ isOpen, onClose }: ModalProps) {
                 <div>
                   {" "}
                   <label htmlFor="">Start Time</label>
-                  <TimePicker style={{ width: "100%" }} />
+                  <TimePicker
+                    onChange={handleStartTimeChange}
+                    style={{ width: "100%" }}
+                  />
                 </div>{" "}
                 <div>
                   {" "}
                   <label htmlFor="">End Time</label>
-                  <TimePicker style={{ width: "100%" }} />
+                  <TimePicker
+                    onChange={handleEndTimeChange}
+                    style={{ width: "100%" }}
+                  />
                 </div>
                 <div>
                   <label
@@ -256,7 +294,7 @@ function Modal({ isOpen, onClose }: ModalProps) {
                     className="mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md px-3 py-2"
                   >
                     {metadata.daysOfWeek &&
-                      metadata.daysOfWeek.map((day) => (
+                      metadata.daysOfWeek.map((day: DayOfWeek) => (
                         <option key={day.value} value={day.value}>
                           {day.label}
                         </option>
@@ -277,7 +315,7 @@ function Modal({ isOpen, onClose }: ModalProps) {
                     onChange={handleInputChange}
                     className="mt-1 focus:ring-primary-500 focus:border-primary-500 block w-full shadow-sm sm:text-sm border-gray-300 rounded-md px-3 py-2"
                   >
-                    {metadata.daysOfWeek?.map((day) => (
+                    {metadata.daysOfWeek?.map((day: DayOfWeek) => (
                       <option key={day.value} value={day.value}>
                         {day.label}
                       </option>

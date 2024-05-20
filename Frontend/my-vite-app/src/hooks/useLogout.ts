@@ -22,14 +22,14 @@ const useLogout = () => {
           },
         }
       );
+      dispatch(removeCurrentUser());
       addToast("Logout successful", {
         appearance: "success",
         autoDismiss: true,
         autoDismissTimeout: 3000,
       });
-      dispatch(removeCurrentUser());
-      navigate("/");
       localStorage.removeItem("accessToken");
+      navigate("/");
     } catch (error: any) {
       addToast(error.message, {
         appearance: "error",

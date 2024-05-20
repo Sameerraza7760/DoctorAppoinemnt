@@ -1,13 +1,10 @@
 export interface Message {
-
-  content: string;
+  message: string;
+  patientId: string | undefined;
+  doctorId?: string;
   senderId: string | undefined;
-  receiverId: string;
-  senderType: string;
-  receiverType: string;
-  
+  timestamp: string;
 }
-
 
 //   sender: {
 //     type: mongoose.Schema.Types.ObjectId,

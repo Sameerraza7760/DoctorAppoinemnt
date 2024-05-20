@@ -1,0 +1,20 @@
+.chatRoom {
+  display: flex;
+}
+
+@media (max-width: 768px) {
+  .chatRoom {
+    flex-direction: column;
+  }
+  .sidebarPatients {
+    width: 100%;
+  }
+  .chatArea{
+    width: 100%;
+
+  }
+  .messegeInput{
+    position: fixed;
+    bottom: auto;
+  }
+}

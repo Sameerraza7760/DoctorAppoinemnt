@@ -2,14 +2,15 @@ import { useEffect, useState } from "react";
 import { useSelector } from "react-redux";
 import useResourceFetch from "../../hooks/useFetch";
 import usePostData from "../../hooks/useApiRequests";
-import socket from "../../services/socketService";
 import Button from "../Button/Button";
 import { Review } from "./../../types/type.review";
+import useSocket from "../../hooks/useSocket";
 interface reviewSectionProps {
   doctorId: string;
 }
 
 const ReviewSection = ({ doctorId }: reviewSectionProps) => {
+  const { socket, isConnected } = useSocket();
   const { data } = useResourceFetch(`/api/v1/patients/getReviews/${doctorId}`);
   const { postData, isLoading } = usePostData();
   const { currentUser } = useSelector((state: any) => state?.user);
@@ -43,7 +44,7 @@ const ReviewSection = ({ doctorId }: reviewSectionProps) => {
     if (!formData.reviewContent) return;
     const url = "/api/v1/patients/addReview";
     await postData(url, formData);
-    socket.emit("reviewAdded", formData);
+    socket?.emit("reviewAdded", formData);
     setFormData({
       reviewContent: "",
       author: "",
@@ -51,31 +52,28 @@ const ReviewSection = ({ doctorId }: reviewSectionProps) => {
       date: "",
     });
   };
+
+
   useEffect(() => {
-    socket.on("connect", () => {
-      console.log("Connected to WebSocket server");
-    });
-    socket.on("reviewsFetched", ({ savedReview }) => {
-      if (savedReview.doctorId === doctorId) {
-        setReviews((prevReviews) => [...prevReviews, savedReview]);
-        console.log("New review received:", savedReview);
-      }
-    });
+    if (socket && isConnected) {
+      socket.on("reviewsFetched", ({ savedReview }) => {
+        if (savedReview.doctorId === doctorId) {
+          setReviews((prevReviews) => [...prevReviews, savedReview]);
+          console.log("New review received:", savedReview);
+        }
+      });
+    }
+  }, [socket, isConnected]);
 
-    socket.on("disconnect", () => {
-      console.log("Disconnected from WebSocket server");
-    });
 
-    return () => {
-      socket.disconnect();
-    };
-  }, []);
-
+  
   useEffect(() => {
     if (data && data.reviews) {
       setReviews(data.reviews);
     }
   }, [data]);
+
+
 
   const renderReviews = () => {
     if (reviewsData && reviewsData.length > 0) {

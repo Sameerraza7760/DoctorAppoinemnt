@@ -42,6 +42,7 @@ const PatientSchema = new Schema(
       type: String,
       required: [true, "password is required"],
     },
+    googleId: String,
     refreshToken: {
       type: String,
     },

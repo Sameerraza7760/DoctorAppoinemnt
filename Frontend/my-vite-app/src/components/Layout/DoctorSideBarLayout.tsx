@@ -19,7 +19,7 @@ const DoctorLayout = ({ children }: ChilderInterface) => {
         className={`transition-all duration-300 ${
           isSidebarOpen ? "w-2/5" : "w-0"
         } overflow-hidden md:w-[250px]`}
-        style={{ flex: "none" }} // Ensure the sidebar doesn't grow or shrink
+        style={{ flex: "none" }} 
       >
         <DoctorSidebar />
       </div>

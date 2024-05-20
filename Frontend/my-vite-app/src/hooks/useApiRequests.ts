@@ -26,6 +26,26 @@ const useApiRequests = () => {
       console.error("Error:", error);
     }
   };
+
+  const addAdditionDoctorsDetail = async (url: string, data: unknown) => {
+    setIsLoading(true);
+
+    try {
+      const response = await axios.post(url, data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+          "User-Type": userType,
+          Authorization: `Bearer ${accessToken}`,
+        },
+      });
+
+      setIsLoading(false);
+      return response.data;
+    } catch (error) {
+      setIsLoading(false);
+      console.error("Error:", error);
+    }
+  };
   const putData = async (url: string, data: unknown) => {
     setIsLoading(true);
 
@@ -46,7 +66,7 @@ const useApiRequests = () => {
     }
   };
 
-  return { isLoading, postData, putData };
+  return { isLoading, postData, putData, addAdditionDoctorsDetail };
 };
 
 export default useApiRequests;

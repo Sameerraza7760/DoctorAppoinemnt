@@ -4,5 +4,4 @@ const handleNotificationSendtoPatient = (socket, io) => {
     io.emit("receivedNotificationtoPatient", { patientId, status });
   });
 };
-
 export default handleNotificationSendtoPatient;

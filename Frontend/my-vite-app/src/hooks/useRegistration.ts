@@ -13,15 +13,15 @@ const useRegistration = (url: string) => {
   const { userType } = useUserContext();
   const {
     register,
-    handleSubmit,control,
+    handleSubmit,
+    control,
     formState: { isSubmitting, errors },
   } = useForm({
     resolver: zodResolver(userType === "doctor" ? doctorSchema : patientSchema),
   });
 
   const onSubmit: SubmitHandler<FieldValues> = async (data) => {
-    try { console.log(data.startTiming);
-    
+    try {
       const response = await axios.post(url, data, {
         headers: {
           "Content-Type": "application/json",
@@ -50,7 +50,8 @@ const useRegistration = (url: string) => {
     isSubmitting,
     register,
     handleSubmit,
-    errors,control
+    errors,
+    control,
   };
 };
 

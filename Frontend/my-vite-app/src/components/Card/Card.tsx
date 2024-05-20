@@ -8,7 +8,7 @@ interface CardProps {
 
 function Card({ doctor }: CardProps) {
   const { _id, fullName, specialization, experience } = doctor;
-
+ 
   return (
     <div
       className="items-center bg-gray-50 rounded-lg shadow sm:flex dark:bg-gray-800 dark:border-gray-700"

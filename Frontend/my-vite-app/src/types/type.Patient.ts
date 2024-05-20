@@ -10,3 +10,4 @@ export interface PatientData {
   patientImage?: string;
   _id?: string;
 }
+

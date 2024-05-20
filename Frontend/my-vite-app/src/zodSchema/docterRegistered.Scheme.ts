@@ -1,9 +1,5 @@
 import { object, string, number } from "zod";
 
-const convertToMinutes = (time: string) => {
-  const [hours, minutes] = time.split(":").map(Number);
-  return hours * 60 + minutes;
-};
 
 export const doctorSchema = object({
   fullName: string().min(2).max(50),

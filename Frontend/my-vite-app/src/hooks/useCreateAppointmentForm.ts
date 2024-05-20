@@ -2,12 +2,13 @@ import { useState } from "react";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
 import { formatDate, formatTime } from "../../src/utills/formatters";
-import socket from "../services/socketService";
 import { RootState } from "../store/store";
 import { AppointmentRequest } from "../types/type.AppoinmentRequest";
 import useApiRequests from "./useApiRequests";
 import useResourceFetch from "./useFetch";
+import useSocket from "./useSocket";
 const useCreateAppointmentForm = (doctorId: string) => {
+  const { socket } = useSocket();
   const [isTimeAvailable, setIsTimeAvailable] = useState<boolean>(false);
   const { data: doctorAppointments } = useResourceFetch(
     `/api/v1/appointment/getDoctorAppointment/${doctorId}`
@@ -58,7 +59,7 @@ const useCreateAppointmentForm = (doctorId: string) => {
       toast.dark("Doctor Availible this time you can Sent Appointment ", {
         autoClose: 3000,
       });
-    } 
+    }
 
     //The logical NOT operator ! negates the value of overlappingAppointment.
     // So, if overlappingAppointment is undefined, !overlappingAppointment evaluates
@@ -84,13 +85,12 @@ const useCreateAppointmentForm = (doctorId: string) => {
     }));
   };
 
-  const handleTimeChange = (time: string) => {
+  const handleTimeChange = (time: any) => {
     setFormData((prevData) => ({
       ...prevData,
       appointmentTime: formatTime(time),
     }));
   };
-
   const onFinish = async () => {
     try {
       setIsLoading(true);
@@ -98,22 +98,39 @@ const useCreateAppointmentForm = (doctorId: string) => {
         "/api/v1/appointment/createAppointment",
         formData
       );
+
+      if (!response) {
+        toast.error("Failed to send appointment request", {
+          autoClose: 3000,
+        });
+        setIsLoading(false);
+        return;
+      }
+
       toast.success("Appointment Request Sent", {
         autoClose: 3000,
       });
-      if (!response) return;
 
-      socket.emit("createAppointment", {
-        doctorId,
-        patientId: currentUser?._id,
-      });
+      if (socket) {
+        socket.emit("createAppointment", {
+          doctorId,
+          patientId: currentUser?._id,
+        });
+      } else {
+        console.warn("Socket is not defined");
+      }
+
       setIsTimeAvailable(false);
-      setIsLoading(false);
     } catch (error) {
       console.error("Error submitting form:", error);
+      toast.error("Error submitting form", {
+        autoClose: 3000,
+      });
+    } finally {
       setIsLoading(false);
     }
   };
+
   return {
     isTimeAvailable,
     formData,

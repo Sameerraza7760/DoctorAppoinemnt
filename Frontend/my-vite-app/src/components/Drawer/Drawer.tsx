@@ -2,7 +2,7 @@ import { Drawer } from "antd";
 import { DoctorData, additionalDoctorDetails } from "../../types/type.Doctor";
 import { formatTime } from "../../utills/formatters";
 import CreateAppointmentForm from "../Form/CreateAppointmentForm";
-import PatientChatRoom from "./../../pages/Chat/PatientChat";
+import PatientChatRoom from "../../pages/Chat/PatientChatRoom/PatientChat";
 
 interface ExtendedDoctorData extends DoctorData, additionalDoctorDetails {}
 
@@ -34,7 +34,7 @@ const AppointmentDrawer: React.FC<AppointmentDrawerProps> = ({
       <img
         src={typeof doctorImage === "string" ? doctorImage : undefined}
         alt="Doctor's Profile Picture"
-        className="w-16 h-16 rounded-full pl-6 "
+        className="w-16 h-16 rounded-full"
       />
       <h2 style={{ margin: "10px 0", color: "#333", fontSize: "17px" }}>
         Dr: {fullName}
@@ -50,7 +50,7 @@ const AppointmentDrawer: React.FC<AppointmentDrawerProps> = ({
     <Drawer
       title="Appointment Request"
       onClose={onClose}
-      visible={isOpen}
+      open={isOpen}
       width="100%"
       style={{ backgroundColor: "#f0f2f5" }}
     >

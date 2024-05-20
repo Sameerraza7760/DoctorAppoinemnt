@@ -116,6 +116,7 @@ function DocterRegestered() {
             }
             isSubmitting={isSubmitting}
             label={"Submit"}
+            type="submit"
           />
 
           <p className="text-gray-600 font-bold">

@@ -13,13 +13,14 @@ const getDoctors = asyncHandler(async (req, res) => {
 const addAdditionalDetail = asyncHandler(async (req, res) => {
   const { startTiming, endTiming, education, services, startDay, endDay } =
     req.body;
-
+    console.log("Request Body:", req.body);
+    console.log("Uploaded File:", req.file);
   const doctorImage = req.file;
   if (!doctorImage) {
     throw new ApiError(400, "doctorImage is required");
   }
   const profileImage = await uploadOnCloudinary(doctorImage.path);
-
+  if (!profileImage.url) return;
   const doctor = await Doctor.findByIdAndUpdate(
     req.user._id,
     {
@@ -41,7 +42,6 @@ const addAdditionalDetail = asyncHandler(async (req, res) => {
 const getDoctorDetails = asyncHandler(async (req, res) => {
   try {
     const { doctorId } = req.params;
-
     const doctor = await Doctor.findById(doctorId);
 
     if (!doctor) {

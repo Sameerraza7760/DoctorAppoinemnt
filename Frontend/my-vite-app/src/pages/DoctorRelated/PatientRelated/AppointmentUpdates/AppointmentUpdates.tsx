@@ -15,12 +15,8 @@ const AppointmentUpdates = () => {
     `/api/v1/appointment/getPatientAppointment/${currentUser?._id}`
   );
 
-  if (isLoading) {
-    <Loader />;
-    return;
-  }
-  const { data } = appointment;
-  console.log(data);
+  // const { data } = appointment;
+  // console.log(data);
   const getStatusIcon = (status: string) => {
     switch (status) {
       case "Accepted":
@@ -33,6 +29,9 @@ const AppointmentUpdates = () => {
         return null;
     }
   };
+  if (isLoading) {
+    return <Loader />;
+  }
 
   return (
     <div className="container mx-auto px-4 py-8 h-auto max-h-[calc(100vh-2rem)]">
@@ -40,29 +39,31 @@ const AppointmentUpdates = () => {
         Appointment Updates
       </h1>
       <div className="grid grid-cols-1 gap-4 h-auto md:grid-cols-2 lg:grid-cols-3 ">
-        {data?.map((appointment: AppointmentRequest, index: number) => (
-          <div
-            key={index}
-            className="bg-white rounded-lg shadow-md p-6 transition duration-300 ease-in-out transform hover:scale-105"
-          >
-            <div className="flex items-center justify-between mb-2">
-              <h2 className="text-lg font-semibold text-gray-800">
-                Appointment ID: {appointment._id}
-              </h2>
-              <span> {getStatusIcon(appointment.status)}</span>
+        {appointment?.data?.map(
+          (appointment: AppointmentRequest, index: number) => (
+            <div
+              key={index}
+              className="bg-white rounded-lg shadow-md p-6 transition duration-300 ease-in-out transform hover:scale-105"
+            >
+              <div className="flex items-center justify-between mb-2">
+                <h2 className="text-lg font-semibold text-gray-800">
+                  Appointment ID: {appointment._id}
+                </h2>
+                <span> {getStatusIcon(appointment.status)}</span>
+              </div>
+              <p className="text-sm text-gray-600 mb-2">
+                {/* Doctor: {appointment.} */}
+              </p>
+              <p className="text-sm text-gray-600 mb-2">
+                Date: {appointment.appointmentDate}
+              </p>
+              <p className="text-sm text-gray-600">
+                Status:{" "}
+                <span className="font-semibold">{appointment.status}</span>
+              </p>
             </div>
-            <p className="text-sm text-gray-600 mb-2">
-              {/* Doctor: {appointment.} */}
-            </p>
-            <p className="text-sm text-gray-600 mb-2">
-              Date: {appointment.appointmentDate}
-            </p>
-            <p className="text-sm text-gray-600">
-              Status:{" "}
-              <span className="font-semibold">{appointment.status}</span>
-            </p>
-          </div>
-        ))}
+          )
+        )}
       </div>
     </div>
   );

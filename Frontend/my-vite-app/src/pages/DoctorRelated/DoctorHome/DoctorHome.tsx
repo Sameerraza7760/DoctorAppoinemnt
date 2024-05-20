@@ -1,16 +1,17 @@
-import "./style.css";
-import { useEffect } from "react";
-import { useState } from "react";
-import socket from "../../../services/socketService";
-import AlertNotification from "../../../components/Toast/AlertNotification";
-import { useSelector } from "react-redux";
-import { RootState } from "../../../store/store";
-import useToggle from "../../../hooks/useToggle";
-import { useNavigate } from "react-router-dom";
 import { MessageOutlined } from "@ant-design/icons";
+import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import AlertNotification from "../../../components/Toast/AlertNotification";
+import useSocket from "../../../hooks/useSocket";
+import useToggle from "../../../hooks/useToggle";
+import { RootState } from "../../../store/store";
+import "./style.css";
 function DoctorHome() {
   const navigate = useNavigate();
+  const { socket, isConnected } = useSocket();
   const { currentUser } = useSelector((state: RootState) => state?.user);
+
   const { close } = useToggle();
   const [isVisible, setIsVisible] = useState<boolean>(false);
   const [notificationMessage, setNotificationMessage] = useState("");
@@ -22,21 +23,34 @@ function DoctorHome() {
     { id: 2, title: "Consultation with Mr. Smith", time: "10:30 AM" },
     { id: 3, title: "Follow-up call with Ms. Johnson", time: "2:00 PM" },
   ];
+  const handleNotification = ({
+    doctorId,
+    message,
+  }: {
+    doctorId: string;
+    message: string;
+  }) => {
+    console.log("Received notification:", { doctorId, message });
 
+    if (doctorId === currentUser?._id) {
+      setNotificationMessage(message);
+      setIsVisible(true);
+    }
+  };
   useEffect(() => {
-    socket.connect();
-    socket.on("notificationSendToTheDoctor", ({ doctorId, message }) => {
-      if (doctorId === currentUser?._id) {
-        setNotificationMessage(message);
-        console.log("Notification received:", message);
-        setIsVisible(true);
-      }
-    });
-    return () => {
-      socket.disconnect();
-      socket.off("notificationSendToTheDoctor");
-    };
-  }, []);
+    console.log("Socket connection status:", isConnected);
+
+    if (isConnected === true && currentUser?._id) {
+      console.log("Setting up socket listener for notifications");
+
+      socket?.on("notificationSendToTheDoctor", handleNotification);
+
+      return () => {
+        console.log("Cleaning up socket listener");
+        socket?.off("notificationSendToTheDoctor", handleNotification);
+      };
+    }
+  }, [isConnected, socket]);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -109,13 +123,6 @@ function DoctorHome() {
               ))}
             </ul>
           </div>
-
-          {/* Add more sections here */}
-          {/* Example: */}
-          {/* <div className="bg-blue-500 text-white p-6 rounded-lg shadow-md">
-                    <h3 className="text-lg font-semibold mb-2">Another Section</h3>
-                    <p className="text-gray-200">Content goes here</p>
-                </div> */}
         </div>
       </div>
     </>
