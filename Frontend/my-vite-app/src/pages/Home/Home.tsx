@@ -4,6 +4,7 @@ import AlertNotification from "../../components/Toast/AlertNotification";
 import useToggle from "../../hooks/useToggle";
 import socket from "../../services/socketService";
 import { RootState } from "../../store/store";
+import Loader from "../../components/Loader/Loader";
 import "./style.css";
 function Home() {
   const { close: handleCloseNotification } = useToggle();
@@ -16,50 +17,50 @@ function Home() {
     (state: RootState) => state?.user?.currentUser
   );
   console.log("outside", currentUser?._id);
-  // const [socketConnected, setSocketConnected] = useState<boolean>(false);
-
-  // useEffect(() => {
-  //   const socketInstance = socket.connect();
-  //   console.log("Socket connecting...");
-
-  //   socketInstance.on("connect", () => {
-  //     console.log("Socket connected:", socketInstance.connected);
-  //     setSocketConnected(true);
-  //   });
-
-  //   socketInstance.on("receivedNotificationtoPatient", (data) => {
-  //     console.log("Notification received:", data);
-  //     setIsVisible(true);
-  //     setAppointmentStatus(data.status);
-  //   });
-
-  //   socketInstance.on("disconnect", () => {
-  //     console.log("Socket disconnected");
-  //     setSocketConnected(false);
-  //   });
-
-  //   return () => {
-  //     socketInstance.disconnect();
-  //     console.log("Socket disconnected (cleanup)");
-  //   };
-  // }, []);
+  const [socketConnected, setSocketConnected] = useState<boolean>(false);
 
   useEffect(() => {
-    socket.connect();
-    socket.on("receivedNotificationtoPatient", ({ patientId, status }) => {
-      if (patientId === currentUser?._id) {
-        setIsVisible(true);
-        setAppointmentStatus(status);
-      }
+    const socketInstance = socket.connect();
+    console.log("Socket connecting...");
+
+    socketInstance.on("connect", () => {
+      console.log("Socket connected:", socketInstance.connected);
+      setSocketConnected(true);
     });
+
+    socketInstance.on("receivedNotificationtoPatient", (data) => {
+      console.log("Notification received:", data);
+      setIsVisible(true);
+      setAppointmentStatus(data.status);
+    });
+
+    socketInstance.on("disconnect", () => {
+      console.log("Socket disconnected");
+      setSocketConnected(false);
+    });
+
     return () => {
-      socket.disconnect();
-      socket.off("notificationSendToTheDoctor");
+      socketInstance.disconnect();
+      console.log("Socket disconnected (cleanup)");
     };
   }, []);
-  // if (!socketConnected) {
-  //   return <Loader />;
-  // }
+
+  // useEffect(() => {
+  //   socket.connect();
+  //   socket.on("receivedNotificationtoPatient", ({ patientId, status }) => {
+  //     if (patientId === currentUser?._id) {
+  //       setIsVisible(true);
+  //       setAppointmentStatus(status);
+  //     }
+  //   });
+  //   return () => {
+  //     socket.disconnect();
+  //     socket.off("notificationSendToTheDoctor");
+  //   };
+  // }, []);
+  if (!socketConnected) {
+    return <Loader />;
+  }
   return (
     <>
       {" "}
