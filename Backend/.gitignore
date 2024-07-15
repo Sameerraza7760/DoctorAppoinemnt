@@ -1,7 +1,6 @@
 # Ignore .env files
 .env
-package.json
-package-lock.json
+
 
 
 # Ignore Node.js modules (if using Node.js)
@@ -14,3 +13,6 @@ dist/
 # Ignore environment-specific files
 .DS_Store   # macOS
 .vscode/    # Visual Studio Code configuration
+
+# Ignore package.json file
+package.json
