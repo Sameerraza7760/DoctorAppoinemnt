@@ -3,7 +3,8 @@
 
 # Ignore Node.js modules (if using Node.js)
 node_modules/
-
+package-json/
+package-lock.json/
 # Ignore build artifacts (if applicable)
 build/
 dist/
