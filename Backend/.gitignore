@@ -1,0 +1,13 @@
+# Ignore .env files
+.env
+
+# Ignore Node.js modules (if using Node.js)
+node_modules/
+
+# Ignore build artifacts (if applicable)
+build/
+dist/
+
+# Ignore environment-specific files
+.DS_Store   # macOS
+.vscode/    # Visual Studio Code configuration
