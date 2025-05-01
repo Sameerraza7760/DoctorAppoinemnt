@@ -1,41 +1,35 @@
+import { CopyOutlined } from "@ant-design/icons";
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 import List from "../../../components/List/List";
 import Loader from "../../../components/Loader/Loader";
 import useResourceFetch from "../../../hooks/useFetch";
 import { DoctorData } from "../../../types/type.Doctor";
-import { CopyOutlined } from "@ant-design/icons";
-import { useNavigate } from "react-router-dom";
+import { useMemo } from "react";
 function DoctorsList() {
   const navigate = useNavigate();
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedDisease, setSelectedDisease] = useState("");
-  const {
-    data: doctors,
-    isLoading,
-    error,
-  } = useResourceFetch("/api/v1/doctors");
+
+  const { data: doctors, isLoading } = useResourceFetch("/api/v1/doctors");
+
+  const filteredDoctors = useMemo(() => {
+    return doctors?.filter(
+      (doctor: DoctorData) =>
+        doctor.fullName.toLowerCase().includes(searchTerm.toLowerCase()) &&
+        (selectedDisease === "" ||
+          doctor.specialization
+            .toLowerCase()
+            .includes(selectedDisease.toLowerCase()))
+    );
+  }, [doctors, searchTerm,selectedDisease]);
 
   if (isLoading) {
     return <Loader />;
   }
 
-  if (error) {
-    return <div>Error: {error.toString()}</div>;
-  }
-
-  const filteredDoctors = doctors?.filter(
-    (doctor: DoctorData) =>
-      doctor.fullName.toLowerCase().includes(searchTerm.toLowerCase()) &&
-      (selectedDisease === "" ||
-        doctor.specialization
-          .toLowerCase()
-          .includes(selectedDisease.toLowerCase()))
-  );
-
   const diseases: string[] = Array.from(
-    new Set(
-      doctors?.map((doctor: DoctorData) => doctor.specialization.toLowerCase())
-    )
+    doctors?.map((doctor: DoctorData) => doctor.specialization.toLowerCase())
   );
 
   return (

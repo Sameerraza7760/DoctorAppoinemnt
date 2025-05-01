@@ -37,7 +37,7 @@ const useLogin = (url: string, Schema: SchemaType) => {
           return;
         }
         navigate("/doctor/home");
-      }, 2000);
+      }, 2000); 
 
       const user = response?.data?.data?.user;
       dispatch(setCurrentUser(user));

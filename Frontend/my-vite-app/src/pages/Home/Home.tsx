@@ -20,15 +20,17 @@ function Home() {
   useEffect(() => {
     if (socket && isConnected) {
       console.log("Socket connected:", socket.connected);
-
       socket.on("receivedNotificationtoPatient", (data) => {
         console.log("Notification received:", data);
         setIsVisible(true);
         setAppointmentStatus(data.status);
       });
     }
-    
   }, [socket, isConnected]);
+
+
+
+
 
   useEffect(() => {
     const timer = setTimeout(() => {

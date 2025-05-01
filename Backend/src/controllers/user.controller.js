@@ -96,6 +96,7 @@ const loginUser = asyncHandler(async (req, res) => {
     httpOnly: true,
     secure: process.env.NODE_ENV === "production",
   };
+
   res.cookie("accessToken", accessToken, options);
   res.cookie("refreshToken", refreshToken, options);
   return res
@@ -165,4 +166,4 @@ const refreshAccessToken = asyncHandler(async (req, res) => {
   }
 });
 
-export { registerUser, loginUser, logoutUser };
+export { registerUser, loginUser, logoutUser,refreshAccessToken };

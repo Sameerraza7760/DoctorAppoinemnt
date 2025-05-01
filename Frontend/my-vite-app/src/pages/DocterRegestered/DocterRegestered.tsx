@@ -11,7 +11,7 @@ function DocterRegestered() {
   );
 
   return (
-    <div className="min-h-screen flex w-full">
+    <div className="min-h-screen flex w-full"  >
       {" "}
       <div className="w-full sm:w-[50%] bg-white p-8 ">
         {" "}

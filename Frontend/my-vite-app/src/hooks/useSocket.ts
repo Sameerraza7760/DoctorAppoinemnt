@@ -16,14 +16,10 @@ const useSocket = () => {
     socket.on("disconnect", () => {
       setIsConnected(false);
     });
-
     setSocketInstance(socket);
-
     return () => {
       socket.disconnect();
     };
-
-    
   }, []);
 
   return { socket: isConnected ? socketInstance : null, isConnected };

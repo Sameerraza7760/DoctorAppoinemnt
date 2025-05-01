@@ -29,8 +29,6 @@ function Register() {
           },
         }
       );
-
-      // Handle response
       console.log("Registration successful", response.data);
       alert("Registration successful");
     } catch (error: any) {

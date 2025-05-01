@@ -1,10 +1,14 @@
+import React from "react";
 import { DoctorData } from "../../types/type.Doctor";
 import Card from "../Card/Card";
+
 interface ListProps {
   doctors: DoctorData[];
 }
 
-function List({ doctors }: ListProps) {
+const List: React.FC<ListProps> = React.memo(({ doctors }) => {
+  console.log("List component rendered");
+
   return (
     <div className="grid gap-8 mb-6 lg:mb-16 md:grid-cols-2">
       {doctors?.map((doctor) => (
@@ -12,6 +16,6 @@ function List({ doctors }: ListProps) {
       ))}
     </div>
   );
-}
+});
 
 export default List;

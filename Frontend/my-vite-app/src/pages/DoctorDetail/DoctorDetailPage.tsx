@@ -23,12 +23,9 @@ const DoctorDetailPage = () => {
       <div className="bg-gray-100 min-h-screen">
         <DoctorDetailHeader doctorDetail={doctor} />
         <main className="container w-[90%] mx-auto py-8">
-          {/* /// Doctor Detail content Here  */}
           <DoctorDetailButton doctorDetail={doctor} />
           <DoctorServices services={doctor.services} />
-    
           <DoctorSpecialization specialization={doctor.specialization} />
-    
           <ReviewSection doctorId={doctor._id} />
         </main>
         <DoctorDetailFooter />

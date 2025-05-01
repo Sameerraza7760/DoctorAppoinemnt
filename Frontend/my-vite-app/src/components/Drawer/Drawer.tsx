@@ -41,7 +41,7 @@ const AppointmentDrawer: React.FC<AppointmentDrawerProps> = ({
       </h2>
       <p style={{ color: "#666", fontSize: "17px" }}>
         Availability: {startDay} to {endDay}, {formatTime(startTiming)} to{" "}
-        {formatTime(endTiming)}
+        { (endTiming)}
       </p>
     </div>
   );
